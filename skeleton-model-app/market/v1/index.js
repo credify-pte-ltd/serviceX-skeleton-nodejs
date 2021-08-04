@@ -1,18 +1,22 @@
 const { Router } = require("express")
 const { Credify } = require("@credify/nodejs")
 const formKey = require("../utils/formKey")
-const setupOidc = require("../handlers/setupOidc")
-const userinfo = require("../handlers/userinfo")
 
-const platform = "skeleton-node"
+const evaluate = require("../handlers/evaluateOffer")
+const filterOffer = require("../handlers/filterOffer")
+const countUsers = require("../handlers/countUsers")
+const encryptClaims = require("../handlers/encryptClaims")
+const {
+  personalizeOffers,
+  evaluateOffer,
+  scopeNames,
+  composeClaimObject,
+} = require("./scopes")
+
 const mode = process.env.MODE || "development"
 const signingKey = process.env.TIS_GIFT_SIGNING_KEY
 const apiKey = process.env.TIS_GIFT_API_KEY
 const organizationId = process.env.TIS_GIFT_ID
-const redirectUrl = process.env.TIS_GIFT_REDIRECT_URL
-const scopes = (process.env.TIS_GIFT_SCOPES || "openid,phone,profile").split(
-  ","
-)
 
 module.exports = ({ db }) => {
   const api = Router()
@@ -20,7 +24,7 @@ module.exports = ({ db }) => {
   api.get("/demo-user", async (req, res) => {
     try {
       const presetId = req.query.id
-      const id = presetId || faker.random.number(10000)
+      const id = presetId || faker.datatype.number(10000)
       const user = await u.findByPk(id)
       res.json(user)
     } catch (e) {

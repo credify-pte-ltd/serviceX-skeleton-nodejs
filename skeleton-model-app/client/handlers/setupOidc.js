@@ -12,6 +12,9 @@ const setupOidc = async (
   } else if (req.query.entity_id) {
     options.userId = req.query.entity_id
   }
+  if (req.query.offer_code) {
+    options.offerCode = req.query.offer_code
+  }
 
   try {
     const { oidcUrl, privateKey } = await credify.oidc.initiateOIDC(
