@@ -3,6 +3,7 @@ const { Credify } = require("@credify/nodejs")
 const formKey = require("../utils/formKey")
 const setupOidc = require("../handlers/setupOidc")
 const userinfo = require("../handlers/userinfo")
+const checkExistence = require("../handlers/checkExistence")
 
 const platform = "skeleton-node"
 const mode = process.env.MODE || "development"
@@ -32,6 +33,11 @@ module.exports = ({ db }) => {
   api.post("/oidc", async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
     return userinfo(req, res, { db, credify })
+  })
+
+  api.get("/user-existence", async (req, res) => {
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return checkExistence(req, res, { user: u, credify })
   })
 
   return api
