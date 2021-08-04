@@ -1,0 +1,22 @@
+.backend-vars:
+  variables:
+    PROJECT_PATH: backend
+
+.backend:
+  extends:
+    - .backend-vars
+    - .scoped-service-build
+  variables:
+    PROJECT_NAME: tis-oidc-client-backend
+    DOCKER_FILE: Dockerfile
+
+#-----------------dev-----------------#
+backend-dev:
+  extends:
+    - .backend
+    - .dev-env
+#-----------------prd-----------------#
+backend-prd:
+  extends:
+    - .backend
+    - .prd-env
