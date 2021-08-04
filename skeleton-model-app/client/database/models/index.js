@@ -1,39 +1,47 @@
+const fs = require("fs")
+const path = require("path")
+const Sequelize = require("sequelize")
+const envConfigs = require("../config/config")
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const envConfigs =  require('../config/config');
+const basename = path.basename(__filename)
+const env = process.env.NODE_ENV || "development"
+const dbEnv = env === "local" || "development" ? "development" : "production"
+const config = envConfigs[dbEnv]
+const db = {}
 
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const dbEnv = env === 'local' || 'development' ? "development" : 'production';
-const config = envConfigs[dbEnv];
-const db = {};
-
-let sequelize;
+let sequelize
 if (config.url) {
-  sequelize = new Sequelize(config.url, config);
+  sequelize = new Sequelize(config.url, config)
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  )
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+fs.readdirSync(__dirname)
+  .filter((file) => {
+    return (
+      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
+    )
   })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+  .forEach((file) => {
+    const model = require(path.join(__dirname, file))(
+      sequelize,
+      Sequelize.DataTypes
+    )
+    db[model.name] = model
+  })
 
-Object.keys(db).forEach(modelName => {
+Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
-    db[modelName].associate(db);
+    db[modelName].associate(db)
   }
-});
+})
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+db.sequelize = sequelize
+db.Sequelize = Sequelize
 
-module.exports = db;
+module.exports = db
