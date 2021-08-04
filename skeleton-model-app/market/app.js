@@ -7,11 +7,11 @@ require("dotenv").config()
 const db = require("./database/models")
 
 const app = express()
-app.use(
-  cors({
-    origin: process.env.TIS_FE_ORIGIN,
-  })
-)
+// app.use(
+//   cors({
+//     origin: process.env.APP_FE_ORIGIN,
+//   })
+// )
 app.use(morgan("combined"))
 app.use(bodyParser.json({ limit: "50mb" }))
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }))

@@ -22,7 +22,7 @@ const countUsers = async (
     else return c
   })
 
-  // Your implementation here. The code below is just a reference
+  //*** Your implementation start from here. The code below is just for reference
   try {
     const users = await user.findAll({
       where: {

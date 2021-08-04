@@ -14,9 +14,9 @@ const {
 } = require("./scopes")
 
 const mode = process.env.MODE || "development"
-const signingKey = process.env.TIS_GIFT_SIGNING_KEY
-const apiKey = process.env.TIS_GIFT_API_KEY
-const organizationId = process.env.TIS_GIFT_ID
+const signingKey = process.env.APP_SIGNING_KEY
+const apiKey = process.env.APP_API_KEY
+const organizationId = process.env.APP_ID
 
 module.exports = ({ db }) => {
   const api = Router()

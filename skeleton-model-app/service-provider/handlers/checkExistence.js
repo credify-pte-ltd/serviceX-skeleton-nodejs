@@ -27,7 +27,7 @@ const checkExistence = async (req, res, { user, credify }) => {
       .status(403)
       .send({ message: "This does not support checking with ID" })
   }
-  // Interaction part:
+  //*** Your implementation start from here. The code below is just for reference
   try {
     const r = await user.findAll({ where: { hashedPhoneNumber: phoneNumber } })
     const exists = r.length > 0

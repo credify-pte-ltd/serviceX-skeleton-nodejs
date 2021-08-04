@@ -43,7 +43,7 @@ const filterOffer = async (req, res, { user, credify, personalizeOffers }) => {
     }
     let u
 
-    // Interaction here
+    //*** Your implementation start from here. The code below is just for reference
     if (credifyId) {
       const users = await user.findAll({ where: { credifyId } })
       if (users.length !== 1) {

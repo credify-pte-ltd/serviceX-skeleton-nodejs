@@ -7,13 +7,11 @@ const checkExistence = require("../handlers/checkExistence")
 
 const platform = "skeleton-node"
 const mode = process.env.MODE || "development"
-const signingKey = process.env.TIS_GIFT_SIGNING_KEY
-const apiKey = process.env.TIS_GIFT_API_KEY
-const organizationId = process.env.TIS_GIFT_ID
-const redirectUrl = process.env.TIS_GIFT_REDIRECT_URL
-const scopes = (process.env.TIS_GIFT_SCOPES || "openid,phone,profile").split(
-  ","
-)
+const signingKey = process.env.APP_SIGNING_KEY
+const apiKey = process.env.APP_API_KEY
+const organizationId = process.env.APP_ID
+const redirectUrl = process.env.APP_REDIRECT_URL
+const scopes = (process.env.APP_SCOPES || "openid,phone,profile").split(",")
 
 module.exports = ({ db }) => {
   const api = Router()
