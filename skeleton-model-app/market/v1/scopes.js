@@ -129,9 +129,14 @@ const checkValueCondition = (condition, user, usingScopes) => {
   }
 
   if (condition.kind === CONDITIONS.CONTAIN) {
-    // value here is any user's data that match the current condition
-    const qualified = value.includes(claim.value)
-    return { qualified, scopeNames: [scopeName] }
+    // Assuming we have claim: "user-name" then the implementation should be:
+    if (
+      condition.claim.name === "3285592c-9aaf-4182-bff5-941ce5dac483:user-name"
+    ) {
+      const qualified = user.name.includes(condition.value)
+      return { qualified, scopeNames: [scopeName] }
+    }
+    return { qualified: false, scopeNames: [scopeName] }
   }
 
   if (condition.kind === CONDITIONS.IN_RANGE) {
