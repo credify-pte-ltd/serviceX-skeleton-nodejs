@@ -1,11 +1,11 @@
 const extractToken = require("../utils/extractToken")
+const { PERMISSION_SCOPE } = require("../utils/constants")
 
 const evaluate = async (req, res, { user, credify, evaluateOffer }) => {
-  console.log(JSON.stringify(req.body))
   const token = extractToken(req)
   const validToken = await credify.auth.introspectToken(
     token,
-    "individual:read_evaluated_offer"
+    PERMISSION_SCOPE.READ_EVALUATED_OFFER
   )
   if (!validToken) {
     return res.status(401).send({ message: "Unauthorized" })
@@ -47,7 +47,6 @@ const evaluate = async (req, res, { user, credify, evaluateOffer }) => {
     }
     res.json(response)
   } catch (e) {
-    console.log(JSON.stringify(e))
     res.status(500).send({ message: e.message })
   }
 }

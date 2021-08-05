@@ -1,7 +1,6 @@
 const extractToken = require("../utils/extractToken")
 
 const checkExistence = async (req, res, { user, credify }) => {
-  console.log(JSON.stringify(req.body))
   const token = extractToken(req)
   const introspectResult = await credify.auth.introspectTokenReturnResult(token)
   let validToken
@@ -33,7 +32,6 @@ const checkExistence = async (req, res, { user, credify }) => {
     const exists = r.length > 0
     res.send({ data: { exists } })
   } catch (e) {
-    console.log(JSON.stringify(e))
     res.status(500).send(e)
   }
 }

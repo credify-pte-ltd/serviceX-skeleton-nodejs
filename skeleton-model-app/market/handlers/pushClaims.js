@@ -3,7 +3,6 @@ const pushClaims = async (
   res,
   { credify, user, commitment, composeClaimObject, organizationId }
 ) => {
-  console.log(JSON.stringify(req.body))
   if (!req.body.id || !req.body.credify_id) {
     return res.status(400).send({ message: "Invalid body" })
   }
@@ -24,8 +23,6 @@ const pushClaims = async (
       credifyId,
       claims
     )
-    console.log(commitments)
-
     //*** Your implementation start from here. The code below is just for reference
     const obj = {
       credifyId: credifyId,
@@ -33,7 +30,6 @@ const pushClaims = async (
       platform: null, // NOTE: for future use.
     }
     const c = await commitment.findOne({ where: { credifyId } })
-    console.log(c)
     if (c) {
       await c.update(obj)
     } else {
@@ -41,8 +37,6 @@ const pushClaims = async (
     }
     res.json({ credifyId })
   } catch (e) {
-    // console.log(e)
-    console.log(JSON.stringify(e))
     res.status(500).send({ message: e.message })
   }
 }

@@ -3,6 +3,8 @@ const { sha256 } = require("@credify/nodejs")
 const { PAYMENT_METHOD, PRODUCT } = require("../../utils/constants")
 const generateRandomVnPhoneNumber = require("../../utils/generateRandomVnPhoneNumber")
 
+// This is just a random data for testing purpose so we have no responsibility or liability for any issue related to the generated data
+
 const USER_COUNT = 10000
 const productCount = Object.keys(PRODUCT).length
 const paymentMethodCount = Object.keys(PAYMENT_METHOD).length

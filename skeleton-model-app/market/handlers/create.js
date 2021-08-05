@@ -3,7 +3,6 @@ const create = async (
   res,
   { credify, user, composeClaimObject, organizationId }
 ) => {
-  console.log(JSON.stringify(req.body))
   if (!req.body.id || !req.body.password) {
     return res.status(400).send({ message: "Invalid body" })
   }
@@ -51,11 +50,9 @@ const create = async (
     }
 
     const id = await credify.entity.create(profile, password, keys)
-    console.log(id)
     await u.update({ credifyId: id })
     res.json({ id })
   } catch (e) {
-    console.log(JSON.stringify(e))
     res.status(500).send({ message: e.message })
   }
 }

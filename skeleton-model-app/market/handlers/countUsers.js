@@ -1,16 +1,16 @@
 const { Op } = require("sequelize")
 const extractToken = require("../utils/extractToken")
+const { PERMISSION_SCOPE } = require("../utils/constants")
 
 const countUsers = async (
   req,
   res,
   { user, credify, evaluateOffer, scopeNames }
 ) => {
-  console.log(JSON.stringify(req.body))
   const token = extractToken(req)
   const validToken = await credify.auth.introspectToken(
     token,
-    "oidc_client:read_user_counts"
+    PERMISSION_SCOPE.COUNT_USER
   )
   if (!validToken) {
     return res.status(401).send({ message: "Unauthorized" })
@@ -53,7 +53,6 @@ const countUsers = async (
     }
     res.json(response)
   } catch (e) {
-    console.log(JSON.stringify(e))
     res.status(500).send({ message: e.message })
   }
 }

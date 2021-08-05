@@ -1,9 +1,7 @@
 const extractToken = require("../utils/extractToken")
 
 const filterOffer = async (req, res, { user, credify, personalizeOffers }) => {
-  console.log(JSON.stringify(req.body))
   const token = extractToken(req)
-  console.log(token)
   const introspectResult = await credify.auth.introspectTokenReturnResult(token)
   let validToken
   if (
@@ -62,7 +60,6 @@ const filterOffer = async (req, res, { user, credify, personalizeOffers }) => {
     }
     res.json(response)
   } catch (e) {
-    console.log(JSON.stringify(e))
     res.status(500).send({ message: e.message })
   }
 }

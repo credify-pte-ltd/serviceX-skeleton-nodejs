@@ -7,8 +7,6 @@ const encryptClaims = async (
 ) => {
   const accessToken = extractToken(req)
 
-  console.log(JSON.stringify(req.body))
-
   if (accessToken === "") {
     return res.status(401).send({ message: "Unauthorized" })
   }
@@ -53,7 +51,6 @@ const encryptClaims = async (
     }
     res.send(data)
   } catch (e) {
-    console.log(JSON.stringify(e))
     res.send(e)
   }
 }

@@ -15,7 +15,6 @@ const userinfo = async (req, res, { db, credify }) => {
     const data = await credify.oidc.userinfo(accessToken, encryptionPrivateKey)
     res.send({ ...data })
   } catch (e) {
-    console.log(e)
     res.status(500).send(e)
   }
 }
