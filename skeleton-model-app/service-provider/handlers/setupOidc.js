@@ -7,6 +7,7 @@ const setupOidc = async (
   const responseType = "token"
   const responseMode = "fragment"
   const options = { state, responseMode, responseType }
+  // Either entity_id or phone_number is passed in options cause we only need one identity.
   if (req.query.phone_number) {
     options.phoneNumber = req.query.phone_number
   } else if (req.query.entity_id) {

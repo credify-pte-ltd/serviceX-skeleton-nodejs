@@ -1,30 +1,32 @@
 # The skeleton app for serviceX implementation:
 
-Inside the skeleton-model-app folder we have two folders:
+Inside the skeleton-model-app repo we have two folders:
 
-1. Market folder: If you are a market then all the example codes inside this folder
-2. Service-Provider folder: If you are a service provider then all the example codes inside this folder.
+1. Market folder: If you are a market then all the example codes are inside this folder.
+2. Service-Provider folder: If you are a service provider then all the example codes are inside this folder.
 
 ## App structure:
 
-This skeleton app is build on top of nodejs to demo how we can use the serviceX SDK to build the required APIs
-Each repo has each own database, seed datas and full implementation of each required APIs.
+This skeleton app is build on top of nodejs to give a demonstration of using the serviceX SDK to build the required APIs for the integration.
+You can find our SDK in some major supported languages [here](https://github.com/credify-pte-ltd). Each repo has each own database, seed datas for testing and full implementation of all required APIs.
+
+You can reference how to use the SDK [here](https://developers.credify.one/) in case you want to implement it by yourself or just need a reference.
 
 ## How to run it ?
 
-1. You need to create your .env file follow the .env.sample
-2. You need to create your test database follow your connection url inside the .env file
-3. `yarn db:setup` for migration
-4. `yarn dev` or `yarn start` for establish the local server for testing
+1. You need to create your `.env` file follow the `.env.sample`
+2. You need to create your test database follow your connection url inside your `.env` file
+3. `yarn db:setup` for a migration.
+4. `yarn dev` or `yarn start` for establishing the local server for testing
 
-## Customize and interaction:
+## Customizing and interaction:
 
 1. Code logic:
-   You can use our current implementaion if you think it is suitable for your system. For all the flows that need the implementation from your side, we marked the comments like below:
+   You can use our current implementation if you think it is suitable for your system. For all the codes that need the implementation from your side, we marked the comments like below:
 
 `//*** Your implementation start from here. The code below is just for reference`
 
 2. Database interaction:
-   1. If you prefer our created model and database in this repo so you just use this project as a microservice in your system. But it requires you to to sync your user data with our example database.
+   1. If you prefer our created model and database in this repo so you just use this project as a micro service in your system. But it requires you to sync your user data with our user data in the example database.
    2. Or you can create another connection string to handle the part related to your user data.
-   3. Or just treat this project as a reference and you can do an implementation by your way in your current system. But we recommend all the APIs using our serviceX SDK should follow our intruction either in this repo or in our developer [documentation](https://developers.credify.one/) to reduce the unexpected errors when we do an intergraiton between your system and our Credify system.
+   3. Or just treat this project as a reference and you can do an implementation by yourself. But we recommend all the APIs using our serviceX SDK should follow our instruction in this repo or in our developer [documentation](https://developers.credify.one/) to reduce any unexpected errors in an integration phase between your system and our Credify system.

@@ -53,16 +53,6 @@ const create = async (
     const id = await credify.entity.create(profile, password, keys)
     console.log(id)
     await u.update({ credifyId: id })
-    const claims = composeClaimObject(u)
-
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    // Wait for sync on BE;
-    await delay(3000)
-
-    const commitments = await credify.claims.push(organizationId, id, claims)
-
-    console.log(commitments)
-    // TODO: store 'commitments' to DB
     res.json({ id })
   } catch (e) {
     console.log(JSON.stringify(e))
