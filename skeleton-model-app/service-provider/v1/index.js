@@ -33,7 +33,7 @@ module.exports = ({ db }) => {
     return userinfo(req, res, { db, credify })
   })
 
-  api.get("/user-existence", async (req, res) => {
+  api.post("/user-existence", async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
     return checkExistence(req, res, { user: u, credify })
   })
