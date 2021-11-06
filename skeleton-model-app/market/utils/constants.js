@@ -20,8 +20,8 @@ const PAYMENT_METHOD = {
 };
 
 const PERMISSION_SCOPE = {
-  COUNT_USER = "oidc_client:read_user_counts",
-  READ_EVALUATED_OFFER = "individual:read_evaluated_offer"
+  COUNT_USER: "oidc_client:read_user_counts",
+  READ_EVALUATED_OFFER: "individual:read_evaluated_offer"
 }
 
 const CONDITIONS = {

@@ -54,10 +54,10 @@ APP_REDIRECT_URL=http://your-website/callback
 APP_SCOPES=openid,phone,profile,email
 ```
 
-- MODE: can be `sandbox` or `production`
-- PORT: our server's port (default is `8000`)
-- APP_ID: you can get this id when you register your app in serviceX dashboard
-- APP_SIGNING_KEY: you can get this signing key when you register your app in serviceX dashboard
-- APP_API_KEY: you can get this api key when you register your app in serviceX dashboard
-- APP_REDIRECT_URL: Once an OIDC session is successfully completed, the redirection URL will be called.
-- APP_SCOPES: standard scopes you registered in serviceX dashboard
+- MODE: can be `sandbox` or `production` depends on deployment environment.
+- PORT: this server's port, default is `8000`.
+- APP_ID: your organization ID in serviceX Dashboard: **Settings > General Information > Organization ID**.
+- APP_SIGNING_KEY: signing key used to generate digital signature, obtain in serviceX Dashboard: **Settings > Developer Page > Common > Show Signing Private Key**.
+- APP_API_KEY: an API key value which includes API scopes for Credify's API calls, could be created in serviceX Dashboard: **Settings > API Keys > Generate New API Key**. For backend implementation you could allow full API access so with service provider role the API scopes could be `organization`, `oidc_client` and for market role the API scopes could be `organiation`, `idpass_provider` and `claim_provider`.
+- APP_REDIRECT_URL: redirect URL registered with Credify when applying for service provider role, required for service provider implementation only.
+- APP_SCOPES: comma-separated list of requested scopes when applying for service provider role, required for service provider only.
