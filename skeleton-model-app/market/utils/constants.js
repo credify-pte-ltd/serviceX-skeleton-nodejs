@@ -25,16 +25,8 @@ const PERMISSION_SCOPE = {
   READ_FILTER_OFFER: "claim_provider:read_filtered_offers",
 }
 
-const CONDITIONS = {
-  AND: "AND_CONDITION",
-  OR: "OR_CONDITION",
-  NOT: "NOT_CONDITION",
-  CONTAIN: "CONTAIN_CONDITION",
-  IN_RANGE: "IN_RANGE_CONDITION",
-}
 module.exports = {
   PRODUCT,
   PAYMENT_METHOD,
   PERMISSION_SCOPE,
-  CONDITIONS,
 }

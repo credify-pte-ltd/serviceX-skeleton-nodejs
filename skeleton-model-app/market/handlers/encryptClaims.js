@@ -53,12 +53,10 @@ const encryptClaims = async (
           },
           email: {
             email: u.email,
-            email_commitment: c.values["email"],
           },
           profile: {
             family_name: u.lastName,
             given_name: u.firstName,
-            profile_commitment: c.values["profile"],
           },
         },
         claims: encrypted,
