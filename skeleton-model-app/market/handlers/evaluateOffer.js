@@ -1,14 +1,18 @@
 const extractToken = require("../utils/extractToken")
 const { PERMISSION_SCOPE } = require("../utils/constants")
 
-const evaluate = async (req, res, { user, credify, evaluateOffer }) => {
+const evaluate = async (req, res, { user, credify, composeClaimObject }) => {
   const token = extractToken(req)
-  const validToken = await credify.auth.introspectToken(
-    token,
-    PERMISSION_SCOPE.READ_EVALUATED_OFFER
-  )
-  if (!validToken) {
-    return res.status(401).send({ message: "Unauthorized" })
+  try {
+    const validToken = await credify.auth.introspectToken(
+      token,
+      PERMISSION_SCOPE.READ_EVALUATED_OFFER
+    )
+    if (!validToken) {
+      return res.status(401).send({ message: "Unauthorized" })
+    }
+  } catch (e) {
+    return res.status(500).send({ message: e.message })
   }
 
   if (!req.body.credify_id || !req.body.scopes) {
@@ -27,17 +31,21 @@ const evaluate = async (req, res, { user, credify, evaluateOffer }) => {
       where: { credifyId: req.body.credify_id },
     })
     if (users.length !== 1) {
-      throw new Error("Not found user properly")
+      return res.status(500).send({ message: "Not found user properly" })
     }
     const u = users[0]
-
-    const result = evaluateOffer(
-      u,
+    let allUserClaims = composeClaimObject(u)
+    const sharedScopes = req.body.scopes
+    let userSharedClaims = {}
+    for (let scope of sharedScopes) {
+      userSharedClaims[scope] = allUserClaims[scope]
+    }
+    //*** Our SDK already supports offer evaluation for you
+    const result = await credify.offer.evaluateOffer(
       conditions,
-      req.body.scopes,
-      requiredCustomScopes
+      requiredCustomScopes,
+      userSharedClaims
     )
-
     const response = {
       data: {
         rank: result.rank,

@@ -1,20 +1,21 @@
+const { PERMISSION_SCOPE } = require("../utils/constants")
+
 const extractToken = require("../utils/extractToken")
 
-const filterOffer = async (req, res, { user, credify, personalizeOffers }) => {
+const filterOffer = async (req, res, { user, credify, composeClaimObject }) => {
   const token = extractToken(req)
-  const introspectResult = await credify.auth.introspectTokenReturnResult(token)
-  let validToken
-  if (
-    introspectResult.data &&
-    introspectResult.data.active &&
-    introspectResult.data.scope.includes("claim_provider")
-  ) {
-    validToken = true
+  try {
+    const validToken = await credify.auth.introspectToken(
+      token,
+      PERMISSION_SCOPE.READ_FILTER_OFFER
+    )
+    if (!validToken) {
+      return res.status(401).send({ message: "Unauthorized" })
+    }
+  } catch (e) {
+    return res.status(500).send({ message: e.message })
   }
 
-  if (!validToken) {
-    return res.status(401).send({ message: "Unauthorized" })
-  }
   const credifyId = req.body.credify_id
   const localId = req.body.local_id
   const offers = req.body.offers
@@ -51,7 +52,30 @@ const filterOffer = async (req, res, { user, credify, personalizeOffers }) => {
     } else if (localId) {
       u = await user.findByPk(localId)
     }
-    const personalizedOffers = personalizeOffers(u, offers)
+    const personalizedOffers = []
+    await offers.forEach(async (offer) => {
+      const userClaims = composeClaimObject(u)
+      //*** Our SDK already supports offer evaluation for you
+      const result = await credify.offer.evaluateOffer(
+        offer.conditions,
+        offer.required_custom_scopes,
+        userClaims
+      )
+
+      const formattedOffer = {
+        ...offer,
+        evaluation_result: {
+          rank: result.rank,
+          used_scopes: result.usedScopes,
+          requested_scopes: result.requestedScopes,
+        },
+      }
+
+      if (result.rank > 0) {
+        // Return only qualified offers
+        personalizedOffers.push(formattedOffer)
+      }
+    })
 
     const response = {
       data: {
