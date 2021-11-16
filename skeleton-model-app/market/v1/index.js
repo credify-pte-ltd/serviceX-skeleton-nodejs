@@ -6,12 +6,7 @@ const evaluate = require("../handlers/evaluateOffer")
 const filterOffer = require("../handlers/filterOffer")
 const countUsers = require("../handlers/countUsers")
 const encryptClaims = require("../handlers/encryptClaims")
-const {
-  personalizeOffers,
-  evaluateOffer,
-  scopeNames,
-  composeClaimObject,
-} = require("./scopes")
+const { composeClaimObject } = require("./scopes")
 
 const mode = process.env.MODE || "development"
 const signingKey = process.env.APP_SIGNING_KEY
@@ -55,17 +50,17 @@ module.exports = ({ db }) => {
 
   api.post("/offers-filtering", async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
-    return filterOffer(req, res, { user: u, credify, personalizeOffers })
+    return filterOffer(req, res, { user: u, credify, composeClaimObject })
   })
 
   api.post("/user-counts", async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
-    return countUsers(req, res, { user: u, credify, evaluateOffer, scopeNames })
+    return countUsers(req, res, { user: u, credify, composeClaimObject })
   })
 
   api.post("/offer-evaluation", async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
-    return evaluate(req, res, { evaluateOffer, credify, user: u })
+    return evaluate(req, res, { composeClaimObject, credify, user: u })
   })
 
   api.post("/encrypted-claims", async (req, res) => {

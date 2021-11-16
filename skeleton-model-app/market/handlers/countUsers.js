@@ -2,26 +2,27 @@ const { Op } = require("sequelize")
 const extractToken = require("../utils/extractToken")
 const { PERMISSION_SCOPE } = require("../utils/constants")
 
-const countUsers = async (
-  req,
-  res,
-  { user, credify, evaluateOffer, scopeNames }
-) => {
+const countUsers = async (req, res, { user, credify, composeClaimObject }) => {
   const token = extractToken(req)
-  const validToken = await credify.auth.introspectToken(
-    token,
-    PERMISSION_SCOPE.COUNT_USER
-  )
-  if (!validToken) {
-    return res.status(401).send({ message: "Unauthorized" })
+  try {
+    const validToken = await credify.auth.introspectToken(
+      token,
+      PERMISSION_SCOPE.COUNT_USER
+    )
+    if (!validToken) {
+      return res.status(401).send({ message: "Unauthorized" })
+    }
+  } catch (e) {
+    return res.status(500).send({ message: e.message })
   }
+
   const ids = req.body.ids || []
   let conditions = req.body.conditions || [{}]
   conditions = conditions.map((c) => {
     if (c === null) return {}
     else return c
   })
-
+  const requiredCustomScopes = req.body.required_custom_scopes || []
   //*** Your implementation start from here. The code below is just for reference
   try {
     const users = await user.findAll({
@@ -33,12 +34,18 @@ const countUsers = async (
     })
 
     let counts = Array(conditions.length).fill(0)
-    conditions.forEach((c, index) => {
+    await conditions.forEach(async (c, index) => {
       if (Object.keys(c).length === 0) {
         counts[index] = users.length
       } else {
-        users.forEach((u) => {
-          const res = evaluateOffer(u, [c], scopeNames, [])
+        await users.forEach(async (u) => {
+          const userClaims = composeClaimObject(u)
+          //*** Our SDK already supports offer evaluation for you
+          const res = await credify.offer.evaluateOffer(
+            [c],
+            requiredCustomScopes,
+            userClaims
+          )
           if (res.rank === 1) {
             counts[index] += 1
           }
