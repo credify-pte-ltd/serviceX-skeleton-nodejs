@@ -31,10 +31,10 @@
     node-forge "^0.10.0"
     wif "^2.0.6"
 
-"@credify/nodejs@^1.12.0":
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/@credify/nodejs/-/nodejs-1.12.0.tgz#a34afe65c8114dae4f7057c21060a9ef4bec397c"
-  integrity sha512-E4+5WQnfZ4ezmqe3h6JlB6T7hw0GJATUI9sca3FUmHri+BX7nuFIXzZpWOZZ7BE70+Tf9GlFEXVijGyFzmWp6w==
+"@credify/nodejs@^1.13.0":
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/@credify/nodejs/-/nodejs-1.13.0.tgz#0f7696f53fd3f7bd65fa70c32962d0fa93006d48"
+  integrity sha512-/iFtbmy+ilpCQaqv8KWoWSs3czTP3ZcXV2C4LUlFGH5g50npMH6afncR2jBjvx2iXIXcXE64ZuDjv6n/mM3Y3g==
   dependencies:
     "@credify/crypto" "^1.0.0"
     axios "^0.21.1"
