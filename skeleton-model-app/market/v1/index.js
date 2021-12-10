@@ -7,6 +7,7 @@ const filterOffer = require("../handlers/filterOffer")
 const countUsers = require("../handlers/countUsers")
 const encryptClaims = require("../handlers/encryptClaims")
 const { composeClaimObject } = require("./scopes")
+const faker = require("faker")
 
 const mode = process.env.MODE || "development"
 const signingKey = process.env.APP_SIGNING_KEY
