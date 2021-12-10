@@ -15,6 +15,7 @@ const scopes = (process.env.APP_SCOPES || "openid,phone,profile").split(",")
 
 module.exports = ({ db }) => {
   const api = Router()
+  const u = db.Users
 
   api.get("/oidc", async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })

@@ -15,6 +15,8 @@ const organizationId = process.env.APP_ID
 
 module.exports = ({ db }) => {
   const api = Router()
+  const c = db.Commitment
+  const u = db.Users
 
   api.get("/demo-user", async (req, res) => {
     try {
