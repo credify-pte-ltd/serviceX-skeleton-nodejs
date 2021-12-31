@@ -18,7 +18,11 @@ const composeClaimObject = (user, commitments) => {
       ? commitments["b09e8f99-6d89-4e7d-83ea-a43a1787b3e0:sendo%20score"]
       : undefined,
   }
-  common.injectBasicProfileScope(claims, user, commitments)
+  common.injectBasicProfileScope(claims, user, commitments, [
+    "NAME",
+    "EMAIL",
+    "PHONE",
+  ])
   return claims
 }
 
