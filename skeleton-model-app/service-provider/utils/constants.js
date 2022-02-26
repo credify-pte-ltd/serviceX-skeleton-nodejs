@@ -19,7 +19,14 @@ const PAYMENT_METHOD = {
   eWallet: "eWallet",
 };
 
+const APPLICATION_STATUS = {
+  inReview: "INREVIEW",
+  approved: "APPROVED",
+  completed: "completed",
+}
+
 module.exports = {
   PRODUCT,
   PAYMENT_METHOD,
+  APPLICATION_STATUS,
 };

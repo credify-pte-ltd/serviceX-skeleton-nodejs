@@ -1,12 +1,10 @@
 const setupOidc = async (
   req,
   res,
-  { credify, db, platform, organizationId, redirectUrl, scopes }
+  { credify, db, platform, organizationId, redirectUrl, scopes, responseMode, responseType }
 ) => {
   const state = Math.random().toString()
-  const responseType = "token"
-  const responseMode = "fragment"
-  const options = { state, responseMode, responseType }
+  const options = { state, mode: responseMode, type: responseType }
   // Either entity_id or phone_number is passed in options cause we only need one identity.
   if (req.query.phone_number) {
     options.phoneNumber = req.query.phone_number
@@ -30,7 +28,6 @@ const setupOidc = async (
       privateKey,
       platform,
     })
-
     res.redirect(oidcUrl)
   } catch (e) {
     res.send(e)
