@@ -1,4 +1,4 @@
-const extractDOPData = require('../utils/extractDOPData')
+const { extractApplicationData, extractApplicationDetailData } = require('../utils/extractDOPData')
 const oidcCallback = async (req, res, { db, credify, organizationId, redirectUrl, externalDOPService }) => {
     if (!req.query.code || !req.query.state) {
         return res.status(400).send({ message: "Invalid request" })
@@ -24,13 +24,17 @@ const oidcCallback = async (req, res, { db, credify, organizationId, redirectUrl
         const data = await credify.oidc.userinfo(accessToken, encryptionPrivateKey)
 
         // Create Application on service provider system
-        const application = extractDOPData(data)
+        const application = extractApplicationData(data)
         const { createApplication } = externalDOPService;
         const resp = await createApplication(application);
 
         // Save application to db
         application.referenceId = resp.id;
-        await db.Application.create(application);
+        const { dataValues } = await db.Application.create(application);
+
+        const applicationDetail = extractApplicationDetailData(data)
+        applicationDetail.applicationId = dataValues.id
+        await db.ApplicationDetail.create(applicationDetail)
 
         res.send({ ...data })
     } catch (e) {
