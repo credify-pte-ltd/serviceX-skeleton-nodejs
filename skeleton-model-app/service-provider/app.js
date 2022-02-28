@@ -9,7 +9,7 @@ const db = require("./database/models")
 // Setup DI container
 const { createContainer } = require('awilix')
 const container = createContainer()
-container.loadModules([['services/**/*.js', { injector: () => ({ timeout: 2000 }) }]])
+container.loadModules([['external/**/*.js', { injector: () => ({ timeout: 2000 }) }]])
 
 
 // Load DOP Service
