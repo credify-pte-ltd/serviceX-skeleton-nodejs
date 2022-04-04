@@ -17,10 +17,10 @@
     node-forge "^0.8.1"
     rollup-plugin-delete "^2.0.0"
 
-"@credify/crypto@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@credify/crypto/-/crypto-1.2.3.tgz#c4fec5c9a8f72df44245c9b5a0361db3ec46e08e"
-  integrity sha512-fcgbAESv1Hf2CR4HfM5/3N7RYW9EzU03wWxSj/hAsvYT3IDS6wthoHWVjaPfrkJCXhPrybV1Wjlsa15k/rfoQQ==
+"@credify/crypto@^1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@credify/crypto/-/crypto-1.3.4.tgz#9ca87004c8221a507edaefb81ffdf0c648ef5959"
+  integrity sha512-WmtYgu2kuOoPGM7yR0ZP0/dVT2x26Zk30aWy9XqvzyF7Hwco4ECMURjXPdWGzJ6dS3ymAoLJRhMmSnVU/V7s8A==
   dependencies:
     "@credify/crypto-key-composer" "^0.1.3"
     "@peculiar/webcrypto" "^1.2.3"
@@ -28,15 +28,15 @@
     elliptic "^6.5.3"
     eosjs "^21.0.3"
     hdkey "^2.0.1"
-    node-forge "^0.10.0"
+    node-forge "^1.3.0"
     wif "^2.0.6"
 
-"@credify/nodejs@^1.15.0":
-  version "1.15.0"
-  resolved "https://registry.yarnpkg.com/@credify/nodejs/-/nodejs-1.15.0.tgz#9c726016f3a253bbe02e79f95aa4ab3ade46f0cd"
-  integrity sha512-qY3EDKE+oR3DGPVYEKCcZZPKdVo0c8xrQkWV5Unj/ZYm2JR3u1801u70nhMckjBarKNeRb2CWbpmg4kYd41uoA==
+"@credify/nodejs@^1.17.2":
+  version "1.17.2"
+  resolved "https://registry.yarnpkg.com/@credify/nodejs/-/nodejs-1.17.2.tgz#656de5149669341b9073d7e4d39529895f2b4fc8"
+  integrity sha512-3RrREsDp6+yAlXEwcGFOcj4oC2pgmP6shJGxeW/mTPu8/ItetspYsgklPO7eNkcE0h8duouwr2m5k7GSBFVqEQ==
   dependencies:
-    "@credify/crypto" "^1.2.3"
+    "@credify/crypto" "^1.3.4"
     axios "^0.21.1"
     axios-mock-adapter "^1.19.0"
 
@@ -1210,15 +1210,15 @@ node-addon-api@^2.0.0:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-2.0.2.tgz#432cfa82962ce494b132e9d72a15b29f71ff5d32"
   integrity sha512-Ntyt4AIXyaLIuMHF6IOoTakB3K+RWxwtsHNRxllEoA6vPwP9o4866g6YWDLUdnucilZhmkxiHwHr11gAENw+QA==
 
-node-forge@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
-  integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
-
 node-forge@^0.8.1:
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.8.5.tgz#57906f07614dc72762c84cef442f427c0e1b86ee"
   integrity sha512-vFMQIWt+J/7FLNyKouZ9TazT74PRV3wgv9UT4cRjC8BffxFbKXkgIWR42URCPSnHm/QDz6BOlb2Q0U4+VQT67Q==
+
+node-forge@^1.3.0:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-1.3.1.tgz#be8da2af243b2417d5f646a770663a92b7e9ded3"
+  integrity sha512-dPEtOeMvF9VMcYV/1Wb8CPoVAXtp6MKMlcbAt4ddqmGqUJ6fQZFXkNZNkNlfevtNkGtaSoXf/vNNNSvgrdXwtA==
 
 node-gyp-build@^4.2.0:
   version "4.2.3"
