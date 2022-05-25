@@ -6,6 +6,7 @@ const evaluate = require("../handlers/evaluateOffer")
 const filterOffer = require("../handlers/filterOffer")
 const countUsers = require("../handlers/countUsers")
 const encryptClaims = require("../handlers/encryptClaims")
+const pushClaims = require("../handlers/pushClaims")
 const { composeClaimObject } = require("./scopes")
 const faker = require("faker")
 
