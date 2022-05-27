@@ -25,5 +25,5 @@ app.use("/v1", v1({ db }))
 
 /// Start server
 app.listen(port, () => {
-  console.log(`Demo server listening at http://localhost:${port}`)
+  console.log(`Server listening at http://localhost:${port}`)
 })
