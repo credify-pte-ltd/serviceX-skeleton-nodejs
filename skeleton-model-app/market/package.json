@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js",
+    "dev": "nodemon server.js",
+    "start": "node server.js",
     "db:setup": "yarn run db:migrate",
     "sequelize": "sequelize --models-path=database/models",
     "db:create": "yarn run sequelize db:create",
