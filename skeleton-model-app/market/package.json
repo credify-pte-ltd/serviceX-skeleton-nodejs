@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is a skeleton service that can easily integrate serviceX.",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server.js",
@@ -25,7 +25,7 @@
     "testSequencer": "<rootDir>/__tests__/utils/testSequencer.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "@credify-pte-ltd",
   "license": "MIT",
   "dependencies": {
     "@credify/nodejs": "^1.19.0",

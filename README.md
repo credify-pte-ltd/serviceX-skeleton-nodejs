@@ -106,13 +106,27 @@ We have Dockerfile in each folder in case you want to build a docker image.
 
 ## How to customize
 
-This repository is ready for you to integrate serviceX out-of-the-box. All you have to do is to complete the implementation that is marked like:
-
-`//*** Your implementation starts from here. The code below is just for reference`
-
-Only thing we need you to complete is database interaction.
+This repository is ready for you to integrate serviceX out-of-the-box. All you have to do is to complete the implementation of `dataInteraction/index.js`. 
 
 - If you deploy this repository to contain your end-user data
   - You will need to sync this service with your main service regarding the end-user data
 - If you deploy this repository without end-user data
   - You will need to add a database connection about the end-user data
+
+
+## How to test
+
+This repository has integration test with [Jest](https://jestjs.io/) and [SuperTest](https://github.com/visionmedia/supertest).
+
+You will need to edit `testConfig.js`. If you need a test user (`TEST_CREDIFY_ID`), please let us know.
+
+```shell
+$ cd serviceX-skeleton-nodejs
+
+# If you are Market
+$ cd skeleton-model-app/market
+
+$ yarn test
+```
+
+
