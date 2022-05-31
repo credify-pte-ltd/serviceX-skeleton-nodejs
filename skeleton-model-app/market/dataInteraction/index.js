@@ -146,10 +146,14 @@ const generateVerificationInfo = (user) => {
  *
  * @param db
  * @param credifyId
- * @returns {Promise<Model|null>}
+ * @returns {Promise<Object|null>}
  */
 const fetchCommitment = async (db, credifyId) => {
-  return await db.Commitment.findOne({ where: { credifyId } })
+  const model = await db.Commitment.findOne({ where: { credifyId } })
+  if (model) {
+    return model.values;
+  }
+  return null;
 }
 
 /**

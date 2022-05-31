@@ -52,7 +52,7 @@ const encryptClaims = async (req, res, { db, credify }) => {
       return res.status(500).send({message: "Not found commitment properly"})
     }
 
-    const claims = makeUserClaimObject(u, { selectedScopes: scopes, commitments: c.values });
+    const claims = makeUserClaimObject(u, { selectedScopes: scopes, commitments: c });
 
     const encrypted = await credify.claims.encrypt(claims, publicKey)
     const verificationInfo = generateVerificationInfo(u);
