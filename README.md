@@ -106,13 +106,14 @@ We have Dockerfile in each folder in case you want to build a docker image.
 
 ## How to customize
 
-This repository is ready for you to integrate serviceX out-of-the-box. All you have to do is to complete the implementation of `dataInteraction/index.js`. 
+This repository is ready for you to integrate serviceX out-of-the-box. All you have to do is to complete the implementation of `market/dataInteraction/index.js`. 
 
 - If you deploy this repository to contain your end-user data
   - You will need to sync this service with your main service regarding the end-user data
 - If you deploy this repository without end-user data
   - You will need to add a database connection about the end-user data
 
+`db` is a Database object that is instantiated in `app.js`. This can be MongoDB instance, PosgreSQL connection, etc. If you do not use a DB in this server, you would need to call API instead of using `db` in the file. In this case, you will not have to instantiate `db` object. 
 
 ## How to test
 

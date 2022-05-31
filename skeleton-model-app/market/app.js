@@ -4,6 +4,8 @@ const cors = require("cors")
 const morgan = require("morgan")
 require("dotenv").config()
 const v1 = require("./v1/index")
+
+// NOTE: This needs to be updated according to the Market requirement.
 const db = require("./database/models")
 
 const app = express()
