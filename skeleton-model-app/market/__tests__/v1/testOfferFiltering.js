@@ -13,7 +13,7 @@ describe(`Test ${DEFAULT_PATH.OFFERS_FILTERING} path`, () => {
     const body = {
       credify_id: TestConfig.TEST_CREDIFY_ID,
       local_id: TestConfig.TEST_USER_ID,
-      offers: [],
+      offers: TestConfig.OFFERS,
     }
 
     const res = await request(app).post(`${prefix}${DEFAULT_PATH.OFFERS_FILTERING}`).send(body)
@@ -23,6 +23,7 @@ describe(`Test ${DEFAULT_PATH.OFFERS_FILTERING} path`, () => {
     expect(res.body.data.offers).toBeInstanceOf(Array);
     expect(res.body.data.offers.length).toBeLessThanOrEqual(body.offers.length)
 
+    console.log(res.body.data.offers)
     res.body.data.offers.forEach((offer) => {
       expect(offer).toHaveProperty("evaluation_result");
       expect(offer.evaluation_result).toHaveProperty("rank");

@@ -55,7 +55,7 @@ const filterOffer = async (req, res, { db, credify }) => {
     await Promise.all((offers.map(async (offer) => {
       const result = await credify.offer.evaluateOffer(
         offer.conditions,
-        offer.required_custom_scopes,
+        offer.required_custom_scopes || [],
         userClaims
       )
 

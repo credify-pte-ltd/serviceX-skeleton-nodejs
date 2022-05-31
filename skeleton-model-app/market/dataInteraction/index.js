@@ -55,8 +55,8 @@ const makeUserClaimObject = (user, { selectedScopes = [], commitments }) => {
   const scopeName = "40f9a736-0d97-409b-a0f7-d23ebca20bde:loyalty-point-data-1653892708";
   if (selectedScopes.length === 0 || selectedScopes.includes(scopeName)) {
     claims[scopeName] = {
-      "40f9a736-0d97-409b-a0f7-d23ebca20bde:amount-1653892708": user.transactionsCount,
-      "40f9a736-0d97-409b-a0f7-d23ebca20bde:tier-1653892708": user.totalPaymentAmount,
+      "40f9a736-0d97-409b-a0f7-d23ebca20bde:amount-1653892708": user.loyaltyPoint,
+      "40f9a736-0d97-409b-a0f7-d23ebca20bde:tier-1653892708": user.tier,
       [`${scopeName}:commitment`]: commitments ? commitments[scopeName] : undefined,
     }
   }

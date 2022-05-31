@@ -42,7 +42,7 @@ const evaluate = async (req, res, { db, credify }) => {
     for (let scope of sharedScopes) {
       userSharedClaims[scope] = allUserClaims[scope]
     }
-    // Our SDK already supports offer evaluation for you
+
     const result = await credify.offer.evaluateOffer(
       conditions,
       requiredCustomScopes,
