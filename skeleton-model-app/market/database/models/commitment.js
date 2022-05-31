@@ -15,8 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   Commitment.init({
     credifyId: DataTypes.STRING,
-    values: DataTypes.JSONB,
-    platform: DataTypes.STRING
+    values: DataTypes.JSONB
   }, {
     sequelize,
     modelName: 'Commitment',

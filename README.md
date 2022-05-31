@@ -37,7 +37,7 @@ $ cp .env.sample .env
 ```
 
 ```shell
-DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/demo_organizations
+DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/skeleton_nodejs
 MODE=sandbox
 PORT=8000
 APP_ID=2a7d6dc3-ff0d-44e3-8344-b99c5f4de4b5
@@ -65,12 +65,31 @@ APP_SCOPES=openid,phone,profile,email
 - `APP_SCOPES`
   - Comma-delimitered list of requested scopes when applying for Service Provider role.
   - Required only for Service Provider
+- `APP_PROVIDING_BASIC_PROFILE`
+  - Basic profile that Market can provide.
+  - Required only for Market
 
-4. Create your database and configure database connection. This service uses PostgreSQL as default database, so if you use PostgreSQL, just add your connection `DATABASE_URL=....` in your `.env`. If you want to test how it works, please run PostgreSQL in your machine and proceed with the next steps.
-5. Migrate the database if you follow the default implementation with PostgreSQL.
+4. Create your database and configure database connection. This service uses PostgreSQL as default database, so if you use PostgreSQL, just add your connection `DATABASE_URL=....` in your `.env`. If you want to test how it works, please run PostgreSQL in your machine with a new database (`$ createdb skeleton_nodejs`) and proceed with the next steps.
+
+```shell
+# Run PostgreSQL
+$ postgres -D /usr/local/var/postgres
+
+# You see database list
+$ psql -l
+
+# Create a new database
+$ createdb skeleton_nodejs
+
+# Now you should see `skeleton_nodejs`
+$ psql -l
+```
+
+5. Migrate the database and add seed data if you follow the default implementation with PostgreSQL.
 
 ```shell
 $ yarn db:setup
+$ yarn db:seed:all
 ```
 
 7. Start the server

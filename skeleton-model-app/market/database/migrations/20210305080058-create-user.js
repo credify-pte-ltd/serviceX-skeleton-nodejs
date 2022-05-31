@@ -53,6 +53,12 @@ module.exports = {
       divorced: {
         type: Sequelize.BOOLEAN,
       },
+      tier: {
+        type: Sequelize.STRING,
+      },
+      loyaltyPoint: {
+        type: Sequelize.INTEGER,
+      },
       credifyId: {
         type: Sequelize.STRING,
       },
