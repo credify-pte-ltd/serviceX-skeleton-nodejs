@@ -23,7 +23,6 @@ describe(`Test ${DEFAULT_PATH.OFFERS_FILTERING} path`, () => {
     expect(res.body.data.offers).toBeInstanceOf(Array);
     expect(res.body.data.offers.length).toBeLessThanOrEqual(body.offers.length)
 
-    console.log(res.body.data.offers)
     res.body.data.offers.forEach((offer) => {
       expect(offer).toHaveProperty("evaluation_result");
       expect(offer.evaluation_result).toHaveProperty("rank");

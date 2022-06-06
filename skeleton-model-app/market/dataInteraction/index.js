@@ -192,6 +192,35 @@ const authenticateInternalUser = async (db, req) => {
   });
 }
 
+/**
+ * This is an endpoint of webhook. You will need to register this exactly same endpoint at Dashboard to receive webhook from us.
+ * @type {string}
+ */
+const webhookEndpoint = "https://example.com/api/v1/webhook";
+
+/**
+ * This handles webhook requests sent by us.
+ * The webhook requests have a signature that proves the quests are coming from us.
+ * The signature verification is handled before calling this handler.
+ * Ref: https://developers.credify.one/guide/webhook.html#webhook
+ *
+ * What this handler should do is
+ * 1. Check the type of this webhook
+ *    - Offer transaction status update
+ *    - Dispute completion
+ *    - Payment completion (BNPL)
+ * 2. Do what you need accordingly
+ *
+ * @param db
+ * @param req
+ * @returns {Promise<void>}
+ */
+const handleWebhook = async (db, req) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve(true), 1000);
+  });
+}
+
 module.exports = {
   fetchUser,
   updateUserId,
@@ -200,4 +229,6 @@ module.exports = {
   fetchCommitment,
   upsertCommitments,
   authenticateInternalUser,
+  webhookEndpoint,
+  handleWebhook,
 }

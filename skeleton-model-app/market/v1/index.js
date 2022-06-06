@@ -55,5 +55,11 @@ module.exports = ({ db }) => {
     return encryptClaims(req, res, { db, credify });
   })
 
+  api.post("/webhook", async (req, res) => {
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return encryptClaims(req, res, { db, credify });
+  })
+
+
   return api
 }
