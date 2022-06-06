@@ -7,75 +7,59 @@ const filterOffer = require("../handlers/filterOffer")
 const countUsers = require("../handlers/countUsers")
 const encryptClaims = require("../handlers/encryptClaims")
 const pushClaims = require("../handlers/pushClaims")
-const { composeClaimObject } = require("./scopes")
 const faker = require("faker")
+const {DEFAULT_PATH} = require("../utils/constants");
 
 const mode = process.env.MODE || "development"
 const signingKey = process.env.APP_SIGNING_KEY
 const apiKey = process.env.APP_API_KEY
-const organizationId = process.env.APP_ID
 
 module.exports = ({ db }) => {
   const api = Router()
-  const c = db.Commitment
-  const u = db.Users
 
+  // Not required
   api.get("/demo-user", async (req, res) => {
     try {
       const presetId = req.query.id
       const id = presetId || faker.datatype.number(10000)
-      const user = await u.findByPk(id)
+      const user = await db.Users.findByPk(id)
+      // const user = await db.Users.findAll();
       res.json(user)
     } catch (e) {
       res.json({ error: { message: e.message } })
     }
   })
 
-  api.post("/create", async (req, res) => {
+  api.post(DEFAULT_PATH.PUSH_CLAIMS, async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
-    return create(req, res, {
-      user: u,
-      credify,
-      composeClaimObject,
-      organizationId,
-    })
+    return pushClaims(req, res, { db, credify })
   })
 
-  api.post("/push-claims", async (req, res) => {
+  api.post(DEFAULT_PATH.OFFERS_FILTERING, async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
-    return pushClaims(req, res, {
-      user: u,
-      commitment: c,
-      credify,
-      composeClaimObject,
-      organizationId,
-    })
+    return filterOffer(req, res, { db, credify })
   })
 
-  api.post("/offers-filtering", async (req, res) => {
+  api.post(DEFAULT_PATH.USER_COUNTS, async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
-    return filterOffer(req, res, { user: u, credify, composeClaimObject })
+    return countUsers(req, res, { db, credify })
   })
 
-  api.post("/user-counts", async (req, res) => {
+  api.post(DEFAULT_PATH.OFFER_EVALUATION, async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
-    return countUsers(req, res, { user: u, credify, composeClaimObject })
+    return evaluate(req, res, { db, credify })
   })
 
-  api.post("/offer-evaluation", async (req, res) => {
+  api.post(DEFAULT_PATH.ENCRYPTED_CLAIMS, async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
-    return evaluate(req, res, { composeClaimObject, credify, user: u })
+    return encryptClaims(req, res, { db, credify });
   })
 
-  api.post("/encrypted-claims", async (req, res) => {
+  api.post("/webhook", async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
-    return encryptClaims(req, res, {
-      user: u,
-      commitment: c,
-      credify,
-      composeClaimObject,
-    })
+    return encryptClaims(req, res, { db, credify });
   })
+
 
   return api
 }

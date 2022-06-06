@@ -14,9 +14,6 @@ module.exports = {
       values: {
         type: Sequelize.JSONB
       },
-      platform: {
-        type: Sequelize.STRING
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

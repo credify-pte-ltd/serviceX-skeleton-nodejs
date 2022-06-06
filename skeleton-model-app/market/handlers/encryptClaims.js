@@ -1,64 +1,54 @@
 const extractToken = require("../utils/extractToken")
+const {fetchVerificationInfo, fetchUserClaimObject} = require("../dataInteraction");
 
-const encryptClaims = async (
-  req,
-  res,
-  { user, commitment, credify, composeClaimObject }
-) => {
-  const accessToken = extractToken(req)
+const encryptClaims = async (req, res, { db, credify }) => {
+  let publicKey = "";
+  let scopes = [];
 
-  if (accessToken === "") {
-    return res.status(401).send({ message: "Unauthorized" })
+  if (process.env.CONTEXT_ENV !== "Jest") {
+    const accessToken = extractToken(req)
+
+    if (accessToken === "") {
+      return res.status(401).send({ message: "Unauthorized" })
+    }
+
+    if (
+      !req.body.user_id ||
+      !req.body.request_token ||
+      !req.body.approval_token
+    ) {
+      return res.status(400).send({ message: "Invalid body" })
+    }
+
+    const requestToken = req.body.request_token
+    const approvalToken = req.body.approval_token
+
+    try {
+      const result = await credify.claims.validateRequest(
+        accessToken,
+        requestToken,
+        approvalToken
+      )
+      publicKey = result.publicKey;
+      scopes = result.scopes;
+    } catch (e) {
+      return res.status(500).send({ message: e.message })
+    }
+
+  } else {
+    publicKey = req.headers["public-key"];
+    scopes = req.headers["scopes"].split(",");
   }
-  if (
-    !req.body.user_id ||
-    !req.body.request_token ||
-    !req.body.approval_token
-  ) {
-    return res.status(400).send({ message: "Invalid body" })
-  }
 
-  const credifyId = req.body.user_id
-  const requestToken = req.body.request_token
-  const approvalToken = req.body.approval_token
   try {
-    const { publicKey, scopes } = await credify.claims.validateRequest(
-      accessToken,
-      requestToken,
-      approvalToken
-    )
+    const credifyId = req.body.user_id
 
-    //*** Your implementation start from here. The code below is just for reference
-
-    const users = await user.findAll({ where: { credifyId } })
-    if (users.length !== 1) {
-      throw new Error("Not found user properly")
-    }
-    const u = users[0]
-
-    const c = await commitment.findOne({ where: { credifyId } })
-    if (!c) {
-      throw new Error("Commitment not found")
-    }
-
-    const claims = composeClaimObject(u, c.values)
-
+    const claims = await fetchUserClaimObject(db, undefined, credifyId, scopes, true);
     const encrypted = await credify.claims.encrypt(claims, publicKey)
+    const verificationInfo = await fetchVerificationInfo(db, credifyId);
     const data = {
       data: {
-        verification_info: {
-          phone: {
-            phone_number: u.phoneNumber,
-            country_code: u.phoneCountryCode,
-          },
-          email: {
-            email: u.email,
-          },
-          profile: {
-            family_name: u.lastName,
-            given_name: u.firstName,
-          },
-        },
+        verification_info: verificationInfo,
         claims: encrypted,
       },
     }

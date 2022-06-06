@@ -1,63 +1,136 @@
-# The skeleton app for ServiceX implementation:
+# Skeleton service for serviceX (Node.js)
 
-Inside the skeleton-model-app repo we have two folders:
+Inside the `skeleton-model-app` repository, we have two folders:
 
-- _market_
+- `market`
   - Implementation for Markets
-- _service-provider_
+- `service-provider`
   - Implementation for Service Providers
 
-## App structure:
+## Background
 
-This skeleton app is built with Nodejs to demonstrate the use of the serviceX SDK to build required APIs for the integration.
+We create boilerplate implementation to minimize the partner's development workload. This repository is written in Node.js.
 
-You can find our SDK in some supported languages [here](https://github.com/credify-pte-ltd). Each repository has its own database, seed data for testing, and full implementation of all required APIs.
+Here is [the integration guide reference](https://developers.credify.one/guide/integration-guide.html#frontend-integration). We need several API endpoints to complete the serviceX integration. That being said, by using this skeleton service, you can get it done right away!
 
-You can reference how to use the SDK [here](https://developers.credify.one/) in case you want to implement it by yourself or just need a reference.
+## How to use
 
-## How to run it?
+1. Set up your organization account on [our dashboard webapp](https://servicex.credify.one/register) and follow this [onboarding guideline](https://developers.credify.one/guide/getting-started.html#getting-started).
+2. Clone this repository to your machine.
 
-1. Create your `.env` with `.env.sample` ( `cp .env.sample .env` )
-2. Create your database add its connection URL in your `.env`
-3. Migrate the database ( `yarn db:setup` )
-4. Start the server ( `yarn dev` or `yarn start` )
+```shell
+$ git clone https://github.com/credify-pte-ltd/serviceX-skeleton-nodejs.git
+$ cd serviceX-skeleton-nodejs
 
-We have Dockerfile in each folder in case you want to build a docker image.
+# If you are Market
+$ cd skeleton-model-app/market
 
-## Customizing and interaction:
-
-### Code logic:
-
-This repository is ready for you to integrate serviceX. All you have to do is to complete the implementation that is marked like:
-
-`//*** Your implementation starts from here. The code below is just for reference`
-
-### Database interaction:
-
-- If you deploy this repository to contain your end-user data
-  - You will need to sync this service with your main service regarding the end-user data
-- If you deploy this repository without end-user data
-  - You will need to add a database connection about the end-user data
-
-## Configuration guideline:
-
-Example config:
-
+# If you are Service Provider
+$ cd skeleton-model-app/service-provider
 ```
-DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/demo_organizations
+
+3. Set up your `.env` providing the properties you get on the dashboard (in step 1).
+
+```shell
+$ cp .env.sample .env
+# and edit the .env
+```
+
+```shell
+DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/skeleton_nodejs
 MODE=sandbox
 PORT=8000
 APP_ID=2a7d6dc3-ff0d-44e3-8344-b99c5f4de4b5
 APP_SIGNING_KEY=MC4CAQAwBQYDK2VwBCIEICIBsa1RQ/M7D2YWODZBFXsKFAWmGtgyHidAPCJEQnL2
 APP_API_KEY=4nN5UifKTRxR1At4syeBHM6e4p0cFOdoqsuUKOIgSYBEJRa8UpGprqorfyWFgdVk
-APP_REDIRECT_URL=http://your-website/callback
+APP_REDIRECT_URL=https://your-website/callback
 APP_SCOPES=openid,phone,profile,email
 ```
 
-- MODE: can be `sandbox` or `production` depends on deployment environment.
-- PORT: this server's port, default is `8000`.
-- APP_ID: your organization ID in serviceX Dashboard: **Settings > General Information > Organization ID**.
-- APP_SIGNING_KEY: signing key used to generate digital signature, obtain in serviceX Dashboard: **Settings > Developer Page > Common > Show Signing Private Key**.
-- APP_API_KEY: an API key value which includes API scopes for Credify's API calls, could be created in serviceX Dashboard: **Settings > API Keys > Generate New API Key**. For backend implementation you could allow full API access so with service provider role the API scopes could be `organization`, `oidc_client` and for market role the API scopes could be `organiation`, `idpass_provider` and `claim_provider`.
-- APP_REDIRECT_URL: redirect URL registered with Credify when applying for service provider role, required for service provider implementation only.
-- APP_SCOPES: comma-separated list of requested scopes when applying for service provider role, required for service provider only.
+- `DATABASE_URL` (Optional)
+  - This is described below.
+- `MODE` (Mandatory)
+  - Either `sandbox` or `production`, depending on deployment environment.
+- `PORT` (Optional)
+  - Port to expose the server.
+  - Default is `8000`
+- `APP_ID` (Mandatory)
+  - Organization ID. Please find it at Dashboard - `Settings > General Information > Organization ID`.
+- `APP_SIGNING_KEY` (Mandatory)
+  - Signing key used to generate signatures. Please find it at Dashboard - `Settings > Developer Page > Common > Show Signing Private Key`.
+  - This is a main body of private key that excludes `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`.
+- `APP_API_KEY` (Mandatory)
+  - API key that specify scopes of Credify's API calls. Please generate it at Dashboard - `Settings > API Keys > Generate New API Key`. This service needs all the scopes you can enable.
+- `APP_REDIRECT_URL`
+  - Redirect URL registered with Credify when applying for Service Provider role.
+  - Required only for Service Provider
+- `APP_SCOPES`
+  - Comma-delimitered list of requested scopes when applying for Service Provider role.
+  - Required only for Service Provider
+- `APP_PROVIDING_BASIC_PROFILE`
+  - Basic profile that Market can provide.
+  - Required only for Market
+
+4. Create your database and configure database connection. This service uses PostgreSQL as default database, so if you use PostgreSQL, just add your connection `DATABASE_URL=....` in your `.env`. If you want to test how it works, please run PostgreSQL in your machine with a new database (`$ createdb skeleton_nodejs`) and proceed with the next steps.
+
+```shell
+# Run PostgreSQL
+$ postgres -D /usr/local/var/postgres
+
+# You see database list
+$ psql -l
+
+# Create a new database
+$ createdb skeleton_nodejs
+
+# Now you should see `skeleton_nodejs`
+$ psql -l
+```
+
+5. Migrate the database and add seed data if you follow the default implementation with PostgreSQL.
+
+```shell
+$ yarn db:setup
+$ yarn db:seed:all
+```
+
+6. Start the server
+
+```shell
+# For development with hot-reload
+$ yarn dev
+
+# For just running the server
+$ yarn start
+```
+
+We have Dockerfile in each folder in case you want to build a docker image.
+
+
+## How to customize
+
+This repository is ready for you to integrate serviceX out-of-the-box. All you have to do is to complete the implementation of `market/dataInteraction/index.js`, provided you work on the market integration. 
+
+- If you deploy this repository to contain your end-user data
+  - You will need to sync this service with your main service regarding the end-user data.
+- If you deploy this repository without end-user data
+  - You will need to add a user data fetching mechanism.
+
+`db` in the code is a Database object that is instantiated in `app.js`. This can be MongoDB instance, PosgreSQL connection, etc. If you do not use a DB in this server, you would need to call API instead of using `db` in the file. In this case, you will not have to instantiate `db` object (`db` will be `undefined`).
+
+## How to test
+
+This repository has integration test with [Jest](https://jestjs.io/) and [SuperTest](https://github.com/visionmedia/supertest).
+
+You will need to edit `testConfig.js`. If you need a test user (`TEST_CREDIFY_ID`), please let us know.
+
+```shell
+$ cd serviceX-skeleton-nodejs
+
+# If you are Market
+$ cd skeleton-model-app/market
+
+$ yarn test
+```
+
+

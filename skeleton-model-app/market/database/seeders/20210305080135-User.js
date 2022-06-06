@@ -1,13 +1,40 @@
 const faker = require("faker")
 const { sha256 } = require("@credify/nodejs")
-const { PAYMENT_METHOD, PRODUCT } = require("../../utils/constants")
 const generateRandomVnPhoneNumber = require("../../utils/generateRandomVnPhoneNumber")
 
 // This is just a random data for testing purpose so we have no responsibility or liability for any issue related to the generated data
 
 const USER_COUNT = 10000
+
+const PRODUCT = {
+  phone: "phone",
+  tv: "tv",
+  laptop: "laptop",
+  jewelry: "jewelry",
+  book: "book",
+  furniture: "furniture",
+  clothes: "clothes",
+  bag: "bag",
+  audio: "audio",
+  bike: "bike",
+  car: "car",
+}
+const PAYMENT_METHOD = {
+  cash: "cash",
+  creditCard: "creditCard",
+  debitCard: "debitCard",
+  eWallet: "eWallet",
+}
+const TIER = {
+  platinum: "platinum",
+  gold: "gold",
+  silver: "silver",
+  classic: "classic",
+}
+
 const productCount = Object.keys(PRODUCT).length
 const paymentMethodCount = Object.keys(PAYMENT_METHOD).length
+const tierCount = Object.keys(TIER).length
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -34,6 +61,8 @@ module.exports = {
         lastPurchaseProduct: Object.values(PRODUCT)[i % productCount],
         married: faker.datatype.boolean(),
         divorced: faker.datatype.boolean(),
+        tier: Object.values(TIER)[i % tierCount],
+        loyaltyPoint: faker.datatype.number(10000),
         credifyId: "",
         createdAt: new Date(),
         updatedAt: new Date(),

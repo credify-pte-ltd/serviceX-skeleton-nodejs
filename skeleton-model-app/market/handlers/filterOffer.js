@@ -1,19 +1,21 @@
 const { PERMISSION_SCOPE } = require("../utils/constants")
-
 const extractToken = require("../utils/extractToken")
+const {fetchUserClaimObject} = require("../dataInteraction");
 
-const filterOffer = async (req, res, { user, credify, composeClaimObject }) => {
-  const token = extractToken(req)
-  try {
-    const validToken = await credify.auth.introspectToken(
-      token,
-      PERMISSION_SCOPE.READ_FILTER_OFFER
-    )
-    if (!validToken) {
-      return res.status(401).send({ message: "Unauthorized" })
+const filterOffer = async (req, res, { db, credify }) => {
+  if (process.env.CONTEXT_ENV !== "Jest") {
+    try {
+      const token = extractToken(req)
+      const validToken = await credify.auth.introspectToken(
+        token,
+        PERMISSION_SCOPE.READ_FILTER_OFFER
+      )
+      if (!validToken) {
+        return res.status(401).send({message: "Unauthorized"})
+      }
+    } catch (e) {
+      return res.status(500).send({message: e.message})
     }
-  } catch (e) {
-    return res.status(500).send({ message: e.message })
   }
 
   const credifyId = req.body.credify_id
@@ -40,25 +42,15 @@ const filterOffer = async (req, res, { user, credify, composeClaimObject }) => {
       }
       return res.status(200).json(response)
     }
-    let u
 
-    //*** Your implementation start from here. The code below is just for reference
-    if (credifyId) {
-      const users = await user.findAll({ where: { credifyId } })
-      if (users.length !== 1) {
-        throw new Error("Not found user properly")
-      }
-      u = users[0]
-    } else if (localId) {
-      u = await user.findByPk(localId)
-    }
+    const userClaims = await fetchUserClaimObject(db, localId, credifyId, [], false);
+
     const personalizedOffers = []
-    await offers.forEach(async (offer) => {
-      const userClaims = composeClaimObject(u)
-      //*** Our SDK already supports offer evaluation for you
+
+    await Promise.all((offers.map(async (offer) => {
       const result = await credify.offer.evaluateOffer(
         offer.conditions,
-        offer.required_custom_scopes,
+        offer.required_custom_scopes || [],
         userClaims
       )
 
@@ -75,7 +67,7 @@ const filterOffer = async (req, res, { user, credify, composeClaimObject }) => {
         // Return only qualified offers
         personalizedOffers.push(formattedOffer)
       }
-    })
+    })))
 
     const response = {
       data: {
