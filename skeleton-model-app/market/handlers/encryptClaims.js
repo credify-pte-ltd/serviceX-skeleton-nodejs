@@ -1,5 +1,5 @@
 const extractToken = require("../utils/extractToken")
-const {fetchUser, fetchCommitment, makeUserClaimObject, generateVerificationInfo} = require("../dataInteraction");
+const {fetchVerificationInfo, fetchUserClaimObject} = require("../dataInteraction");
 
 const encryptClaims = async (req, res, { db, credify }) => {
   let publicKey = "";
@@ -43,19 +43,9 @@ const encryptClaims = async (req, res, { db, credify }) => {
   try {
     const credifyId = req.body.user_id
 
-    const u = await fetchUser(db, undefined, credifyId);
-    if (!u) {
-      return res.status(500).send({message: "Not found user properly"})
-    }
-    const c = await fetchCommitment(db, credifyId);
-    if (!c) {
-      return res.status(500).send({message: "Not found commitment properly"})
-    }
-
-    const claims = makeUserClaimObject(u, { selectedScopes: scopes, commitments: c });
-
+    const claims = await fetchUserClaimObject(db, undefined, credifyId, scopes, true);
     const encrypted = await credify.claims.encrypt(claims, publicKey)
-    const verificationInfo = generateVerificationInfo(u);
+    const verificationInfo = await fetchVerificationInfo(db, credifyId);
     const data = {
       data: {
         verification_info: verificationInfo,

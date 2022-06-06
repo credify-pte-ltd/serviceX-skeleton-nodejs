@@ -1,4 +1,4 @@
-const {fetchUser, makeUserClaimObject, upsertCommitments, authenticateInternalUser, updateUserId} = require("../dataInteraction");
+const {upsertCommitments, authenticateInternalUser, updateUserId, fetchUserClaimObject} = require("../dataInteraction");
 const pushClaims = async (req, res, { db, credify }) => {
 
   const validRequest = await authenticateInternalUser(db, req);
@@ -16,17 +16,12 @@ const pushClaims = async (req, res, { db, credify }) => {
   }
 
   try {
-    const internalId = req.body.id
+    const localId = req.body.id
     const credifyId = req.body.credify_id
-    const u = await fetchUser(db, internalId, credifyId);
-    if (!u) {
-      return res.status(500).send({message: "Not found user properly"})
-    }
-    await updateUserId(db, internalId, credifyId);
-    const claims = await makeUserClaimObject(u, {});
+    await updateUserId(db, localId, credifyId);
+    const claims = await fetchUserClaimObject(db, localId, credifyId, [], false);
 
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    // Wait for sync on BE;
     await delay(3000);
 
     const commitments = await credify.claims.push(

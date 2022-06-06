@@ -1,6 +1,6 @@
 const extractToken = require("../utils/extractToken")
 const { PERMISSION_SCOPE } = require("../utils/constants")
-const {fetchUser, makeUserClaimObject} = require("../dataInteraction");
+const {fetchUserClaimObject} = require("../dataInteraction");
 
 const evaluate = async (req, res, { db, credify }) => {
   if (process.env.CONTEXT_ENV !== "Jest") {
@@ -29,19 +29,8 @@ const evaluate = async (req, res, { db, credify }) => {
 
   try {
     const credifyId = req.body.credify_id;
-
-    const u = await fetchUser(db, undefined, credifyId);
-    if (!u) {
-      return res.status(500).send({message: "Not found user properly"})
-    }
-
-    const allUserClaims = makeUserClaimObject(u, {});
-
     const sharedScopes = req.body.scopes
-    let userSharedClaims = {}
-    for (let scope of sharedScopes) {
-      userSharedClaims[scope] = allUserClaims[scope]
-    }
+    const userSharedClaims = await fetchUserClaimObject(db, undefined, credifyId, sharedScopes, false);
 
     const result = await credify.offer.evaluateOffer(
       conditions,

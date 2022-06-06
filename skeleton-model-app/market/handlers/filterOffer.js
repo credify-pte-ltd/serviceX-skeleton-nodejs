@@ -1,6 +1,6 @@
 const { PERMISSION_SCOPE } = require("../utils/constants")
 const extractToken = require("../utils/extractToken")
-const {fetchUser, makeUserClaimObject} = require("../dataInteraction");
+const {fetchUserClaimObject} = require("../dataInteraction");
 
 const filterOffer = async (req, res, { db, credify }) => {
   if (process.env.CONTEXT_ENV !== "Jest") {
@@ -43,12 +43,7 @@ const filterOffer = async (req, res, { db, credify }) => {
       return res.status(200).json(response)
     }
 
-    const u = await fetchUser(db, localId, credifyId);
-    if (!u) {
-      return res.status(500).send({message: "Not found user properly"})
-    }
-
-    const userClaims = makeUserClaimObject(u, {});
+    const userClaims = await fetchUserClaimObject(db, localId, credifyId, [], false);
 
     const personalizedOffers = []
 

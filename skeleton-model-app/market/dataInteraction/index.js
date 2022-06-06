@@ -1,59 +1,36 @@
-/**
- * This retrieves user model from DB
- * The key will be either local (internal) ID or Credify ID
- *
- * @param db
- * @param localId
- * @param credifyId
- * @returns {Promise<Model|null>}
- */
-const fetchUser = async (db, localId, credifyId) => {
-  let u = null;
-
-  if (credifyId) {
-    const users = await db.Users.findAll({ where: { credifyId } })
-    if (users.length === 1) {
-      u = users[0]
-    }
-  }
-  if (u === null && localId) {
-    u = await db.Users.findByPk(localId)
-  }
-  return u;
-}
+////////////////////////////////////////////
+// REQUIRED IMPLEMENTATION
+////////////////////////////////////////////
 
 /**
- * This updates user's Credify ID
+ * This returns Credify scope object for a specified user.
  *
- * @param db
- * @param localId (optional)
- * @param credifyId
- * @returns {Promise<void>}
+ * @param db DB object. This can be `undefined` upon your configuration.
+ * @param localId string. Internal ID in your system
+ * @param credifyId string. Credify ID
+ * @param includingScopes string[]. If this is empty, it means all scopes.
+ * @param withCommitments boolean. If this is true, `commitment` should be added into the scope object.
+ * @returns {Promise<Object|null>}
  */
-const updateUserId = async (db, localId, credifyId) => {
-  if (!credifyId) {
-    throw new Error("This requires credify ID")
-  }
-  const u = await fetchUser(db, localId, credifyId);
-  await u.update({ credifyId });
-}
+const fetchUserClaimObject = async (db, localId, credifyId, includingScopes, withCommitments) => {
+  const user = await fetchUser(db, localId, credifyId)
 
-/**
- * This generates claim objects
- *
- * @param user User model
- * @param options { selectedScopes, commitments }
- * @returns {{}}
- */
-const makeUserClaimObject = (user, { selectedScopes = [], commitments }) => {
+  if (!user) {
+    return null;
+  }
+
   const shareableProfile = (process.env.APP_PROVIDING_BASIC_PROFILE || "").split(",").map((p) => p.toUpperCase());
-
   const claims = {};
+
+  let commitments = undefined;
+  if (withCommitments) {
+    commitments = await fetchCommitment(db, credifyId);
+  }
 
   // Add advanced scopes
 
   const scopeName = "40f9a736-0d97-409b-a0f7-d23ebca20bde:loyalty-point-data-1653892708";
-  if (selectedScopes.length === 0 || selectedScopes.includes(scopeName)) {
+  if (includingScopes.length === 0 || includingScopes.includes(scopeName)) {
     claims[scopeName] = {
       "40f9a736-0d97-409b-a0f7-d23ebca20bde:amount-1653892708": user.loyaltyPoint,
       "40f9a736-0d97-409b-a0f7-d23ebca20bde:tier-1653892708": user.tier,
@@ -63,7 +40,7 @@ const makeUserClaimObject = (user, { selectedScopes = [], commitments }) => {
 
   // Add basic scopes
 
-  if (selectedScopes.length === 0 || selectedScopes.includes("phone")) {
+  if (includingScopes.length === 0 || includingScopes.includes("phone")) {
     if (shareableProfile.includes("PHONE")) {
       claims[`phone`] = {
         [`phone_number`]: `${user.phoneCountryCode}${user.phoneNumber}`,
@@ -72,7 +49,7 @@ const makeUserClaimObject = (user, { selectedScopes = [], commitments }) => {
     }
   }
 
-  if (selectedScopes.length === 0 || selectedScopes.includes("profile")) {
+  if (includingScopes.length === 0 || includingScopes.includes("profile")) {
     if (shareableProfile.includes("NAME")) {
       claims[`profile`] = {
         [`family_name`]: `${user.lastName}`,
@@ -96,7 +73,7 @@ const makeUserClaimObject = (user, { selectedScopes = [], commitments }) => {
     }
   }
 
-  if (selectedScopes.length === 0 || selectedScopes.includes("email")) {
+  if (includingScopes.length === 0 || includingScopes.includes("email")) {
     if (shareableProfile.includes("EMAIL")) {
       claims[`email`] = {
         [`email`]: `${user.email}`,
@@ -105,7 +82,7 @@ const makeUserClaimObject = (user, { selectedScopes = [], commitments }) => {
     }
   }
 
-  if (selectedScopes.length === 0 || selectedScopes.includes("address")) {
+  if (includingScopes.length === 0 || includingScopes.includes("address")) {
     if (shareableProfile.includes("ADDRESS")) {
       claims[`address`] = {
         address: {
@@ -120,12 +97,15 @@ const makeUserClaimObject = (user, { selectedScopes = [], commitments }) => {
 }
 
 /**
- * This generates verification info object from user model
+ * This returns Credify verification info object
+ * Please do not change the object structure
  *
- * @param user
- * @returns {{phone: {country_code: (string|*), phone_number}, profile: {given_name: *, family_name: *}, email: {email}}}
+ * @param db
+ * @param credifyId
+ * @returns {Promise<{phone: {country_code: (string|*), phone_number}, profile: {given_name: *, family_name: *}, email: {email}}>}
  */
-const generateVerificationInfo = (user) => {
+const fetchVerificationInfo = async (db, credifyId) => {
+  const user = await fetchUser(db, undefined, credifyId);
   return {
     phone: {
       phone_number: user.phoneNumber,
@@ -142,22 +122,25 @@ const generateVerificationInfo = (user) => {
 }
 
 /**
- * This retrieves commitment model from DB
+ * This updates user's Credify ID
+ * Please keep the CredifyID in your system for the later use.
  *
  * @param db
+ * @param localId (optional)
  * @param credifyId
- * @returns {Promise<Object|null>}
+ * @returns {Promise<void>}
  */
-const fetchCommitment = async (db, credifyId) => {
-  const model = await db.Commitment.findOne({ where: { credifyId } })
-  if (model) {
-    return model.values;
+const updateUserId = async (db, localId, credifyId) => {
+  if (!credifyId) {
+    throw new Error("This requires credify ID")
   }
-  return null;
+  const u = await fetchUser(db, localId, credifyId);
+  await u.update({ credifyId });
 }
 
 /**
  * This inserts/updates commitment model into DB
+ * Please keep the commitment object for the later use.
  *
  * @param db
  * @param credifyId
@@ -221,12 +204,58 @@ const handleWebhook = async (db, req) => {
   });
 }
 
+
+
+/////////////////////////////////////////////////////////////
+// Private methods (please modify the following as you like.)
+/////////////////////////////////////////////////////////////
+
+/**
+ * This retrieves user model from DB
+ * The key will be either local (internal) ID or Credify ID
+ *
+ * @param db
+ * @param localId
+ * @param credifyId
+ * @returns {Promise<Model|null>}
+ */
+const fetchUser = async (db, localId, credifyId) => {
+  let u = null;
+
+  if (credifyId) {
+    const users = await db.Users.findAll({ where: { credifyId } })
+    if (users.length === 1) {
+      u = users[0]
+    }
+  }
+  if (u === null && localId) {
+    u = await db.Users.findByPk(localId)
+  }
+  return u;
+}
+
+
+/**
+ * This retrieves commitment model from DB
+ *
+ * @param db
+ * @param credifyId
+ * @returns {Promise<Object|null>}
+ */
+const fetchCommitment = async (db, credifyId) => {
+  const model = await db.Commitment.findOne({ where: { credifyId } })
+  if (model) {
+    return model.values;
+  }
+  return null;
+}
+
+
+
 module.exports = {
-  fetchUser,
+  fetchVerificationInfo,
+  fetchUserClaimObject,
   updateUserId,
-  makeUserClaimObject,
-  generateVerificationInfo,
-  fetchCommitment,
   upsertCommitments,
   authenticateInternalUser,
   webhookEndpoint,
