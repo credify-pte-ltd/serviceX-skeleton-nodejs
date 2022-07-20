@@ -225,6 +225,7 @@ const apiDomain = "https://example.com"
  *    - Offer transaction status update
  *    - Dispute completion
  *    - Payment completion (BNPL)
+ *    - Disbursement requirement status updated
  * 2. Do what you need accordingly
  *
  * @param db
