@@ -2,6 +2,7 @@
 // REQUIRED IMPLEMENTATION
 ////////////////////////////////////////////
 
+const {DEFAULT_PATH, DEFAULT_PATH_PREFIX} = require("../utils/constants");
 /**
  * This returns Credify scope object for a specified user.
  *
@@ -29,6 +30,7 @@ const fetchUserClaimObject = async (db, localId, credifyId, includingScopes, wit
 
   // Add advanced scopes
 
+  // NOTE: Please change this value according to what you have registered on Dashboard.
   const scopeName = "40f9a736-0d97-409b-a0f7-d23ebca20bde:loyalty-point-data-1653892708";
   if (includingScopes.length === 0 || includingScopes.includes(scopeName)) {
     claims[scopeName] = {
@@ -38,7 +40,7 @@ const fetchUserClaimObject = async (db, localId, credifyId, includingScopes, wit
     }
   }
 
-  // Add basic scopes
+  // Add basic scopes. Object keys should remain same.
 
   if (includingScopes.length === 0 || includingScopes.includes("phone")) {
     if (shareableProfile.includes("PHONE")) {
@@ -176,10 +178,41 @@ const authenticateInternalUser = async (db, req) => {
 }
 
 /**
- * This is an endpoint of webhook. You will need to register this exactly same endpoint at Dashboard to receive webhook from us.
+ * This authenticates API client by your own logic.
+ * This is the internal authentication of microservice.
+ *
+ * @param db
+ * @param req (Express req object)
+ * @returns {Promise<boolean>}
+ */
+const authenticateInternalAPIClient = async (db, req) => {
+  // Your service's specific authentication logic.
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve(true), 1000);
+  });
+}
+
+
+/**
+ * This returns BNPL completion callback page.
+ * This is called from the FI context when all the actions necessary from the FI is completed.
+ *
+ * You may process order status in this callback and return a completed page URL.
+ *
+ * @param db
+ * @param orderId
+ * @return {Promise<string>}
+ */
+const getBNPLCallback = async (db, orderId) => {
+  // Do something
+  return "https://example.com"
+}
+
+/**
+ * This is a domain of this server. This is necessary for webhook request validation.
  * @type {string}
  */
-const webhookEndpoint = "https://example.com/api/v1/webhook";
+const apiDomain = "https://example.com"
 
 /**
  * This handles webhook requests sent by us.
@@ -204,6 +237,75 @@ const handleWebhook = async (db, req) => {
   });
 }
 
+
+/**
+ * This composes BNPL order creation payload.
+ * Please check the detailed information below.
+ *
+ * @param req
+ * @return {{totalAmount: *, orderLines: *, paymentRecipient: *, referenceId: *}}
+ */
+const buildOrderCreationPayload = (req) => {
+  /**
+   * {string}
+   * @example "12345abc"
+   */
+  const referenceId = req.body.reference_id;
+
+  /**
+   * {Object}
+   * @example
+   * {
+   *   "value": "9000000",
+   *   "currency": "VND"
+   * }
+   */
+  const totalAmount = req.body.total_amount;
+
+
+  /**
+   * {Array<Object>}
+   * @example
+   * [
+   *   {
+   *     "name": "iPhone 12",
+   *     "reference_id": "iphone-12-black",
+   *     "image_url": "https://www.apple.com/v/iphone-12/j/images/specs/finish_iphone12__ctf4hoqpbnki_large_2x.jpg",
+   *     "product_url": "https://www.apple.com/vn/iphone-12/specs/",
+   *     "quantity": 1,
+   *     "unit_price": {
+   *       "value": "9000000",
+   *       "currency": "VND"
+   *     },
+   *     "subtotal": {
+   *       "value": "9000000",
+   *       "currency": "VND"
+   *     },
+   *     "measurement_unit": "EACH"
+   *   }
+   * ]
+   */
+  const orderLines = req.body.order_lines;
+
+  /**
+   * {Object}
+   * @example
+   * {
+   *   "name": "Apple VN",
+   *   "number": "190123123123",
+   *   "branch": "",
+   *   "bank": "Techcombank"
+   * }
+   */
+  const paymentRecipient = req.body.payment_recipient;
+
+  return {
+    referenceId,
+    totalAmount,
+    orderLines,
+    paymentRecipient,
+  }
+}
 
 
 /////////////////////////////////////////////////////////////
@@ -251,13 +353,15 @@ const fetchCommitment = async (db, credifyId) => {
 }
 
 
-
 module.exports = {
   fetchVerificationInfo,
   fetchUserClaimObject,
   updateUserId,
   upsertCommitments,
   authenticateInternalUser,
-  webhookEndpoint,
+  authenticateInternalAPIClient,
+  getBNPLCallback,
+  buildOrderCreationPayload,
+  apiDomain,
   handleWebhook,
 }
