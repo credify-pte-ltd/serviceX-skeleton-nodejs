@@ -1,4 +1,5 @@
 const {upsertCommitments, authenticateInternalUser, updateUserId, fetchUserClaimObject} = require("../dataInteraction");
+
 const pushClaims = async (req, res, { db, credify }) => {
 
   const validRequest = await authenticateInternalUser(db, req);
