@@ -24,8 +24,12 @@ const getOrders = async (req, res, { db, credify }) => {
 
   const credifyId = req.params.id
 
-  const orders = await credify.bnpl.getOrders(credifyId)
-  res.send(orders)
+  try {
+    const orders = await credify.bnpl.getOrders(credifyId)
+    res.send(orders)
+  } catch (e) {
+    res.status(400).send({ message: e.message })
+  }
 }
 
 module.exports = getOrders
