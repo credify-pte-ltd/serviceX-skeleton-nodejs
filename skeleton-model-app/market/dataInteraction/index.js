@@ -261,7 +261,7 @@ const buildOrderCreationPayload = (req) => {
    *   "currency": "VND"
    * }
    */
-  const totalAmount = req.body.total_amount;
+  const totalAmount = req.body.total_amount; // This should be calculated on backend
 
 
   /**
@@ -298,7 +298,12 @@ const buildOrderCreationPayload = (req) => {
    *   "bank": "Techcombank"
    * }
    */
-  const paymentRecipient = req.body.payment_recipient;
+  const paymentRecipient = {
+    name: "Demo Store",
+    number: "190123123123",
+    branch: "",
+    bank: "Techcombank",
+  }
 
   return {
     referenceId,
