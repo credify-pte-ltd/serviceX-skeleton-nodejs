@@ -4,7 +4,7 @@ const generateRandomVnPhoneNumber = require("../../utils/generateRandomVnPhoneNu
 
 // This is just a random data for testing purpose so we have no responsibility or liability for any issue related to the generated data
 
-const USER_COUNT = 10000
+const USER_COUNT = 5000
 
 const PRODUCT = {
   phone: "phone",
