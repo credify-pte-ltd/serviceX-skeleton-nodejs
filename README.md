@@ -135,7 +135,9 @@ $ yarn test
 
 ## How to deploy on Heroku
 
-https://elements.heroku.com/buildpacks/timanovsky/subdir-heroku-buildpack
+This project structure is a little tricky as it has 2 projects in it. If you use Heroku, you will need to set up build pack correctly.
+
+[Here](https://elements.heroku.com/buildpacks/timanovsky/subdir-heroku-buildpack) is a reference.
 
 ```shell
 $ heroku buildpacks:clear
@@ -143,4 +145,13 @@ $ heroku buildpacks:set https://github.com/timanovsky/subdir-heroku-buildpack
 $ heroku buildpacks:add heroku/nodejs
 $ heroku config:set PROJECT_PATH=skeleton-model-app/market
 $ git push heroku main
+```
+
+The default setting uses PostgreSQL. You can enable it on Heroku dashboard. If the database does not connect to Heroku remote DB well, please check `database/config/config.js`.
+
+To sync with your `.env`, please do the following
+
+```shell
+$ heroku plugins:install heroku-config
+$ heroku config:push
 ```

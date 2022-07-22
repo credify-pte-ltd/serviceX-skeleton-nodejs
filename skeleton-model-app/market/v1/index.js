@@ -26,8 +26,6 @@ module.exports = ({ db }) => {
   let credify = null;
 
   const getCredifyInstance = async () => {
-    console.log(process.env.APP_API_KEY)
-    console.log(process.env.APP_ID)
     if (!credify)
       return await Credify.create(formKey(signingKey), apiKey, { mode });
     return credify;
@@ -36,8 +34,6 @@ module.exports = ({ db }) => {
   // Not required. This is for the debugging purpose.
   api.get("/demo-user", async (req, res) => {
     try {
-      const t = await getCredifyInstance()
-      console.log(t)
       const presetId = req.query.id
       const id = presetId || faker.datatype.number(5000)
       const user = await db.Users.findByPk(id)
