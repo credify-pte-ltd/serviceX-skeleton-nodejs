@@ -34,6 +34,8 @@ module.exports = ({ db }) => {
   // Not required. This is for the debugging purpose.
   api.get("/demo-user", async (req, res) => {
     try {
+      const t = await getCredifyInstance()
+      console.log(t)
       const presetId = req.query.id
       const id = presetId || faker.datatype.number(5000)
       const user = await db.Users.findByPk(id)
@@ -52,6 +54,7 @@ module.exports = ({ db }) => {
   // Called by Credify backend
   api.post(DEFAULT_PATH.OFFERS_FILTERING, async (req, res) => {
     console.log("test")
+    console.log(req.headers)
     return filterOffer(req, res, { db, credify: await getCredifyInstance() })
   })
 
