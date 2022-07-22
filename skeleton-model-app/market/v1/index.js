@@ -26,6 +26,8 @@ module.exports = ({ db }) => {
   let credify = null;
 
   const getCredifyInstance = async () => {
+    console.log(process.env.APP_API_KEY)
+    console.log(process.env.APP_ID)
     if (!credify)
       return await Credify.create(formKey(signingKey), apiKey, { mode });
     return credify;
