@@ -282,7 +282,7 @@ const buildOrderCreationPayload = (req) => {
    *       "value": "9000000",
    *       "currency": "VND"
    *     },
-   *     "measurement_unit": "EACH"
+   *     "measurement_unit": "EA"
    *   }
    * ]
    */
