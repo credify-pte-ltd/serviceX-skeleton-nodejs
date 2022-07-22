@@ -35,7 +35,7 @@ module.exports = ({ db }) => {
   api.get("/demo-user", async (req, res) => {
     try {
       const presetId = req.query.id
-      const id = presetId || faker.datatype.number(10000)
+      const id = presetId || faker.datatype.number(5000)
       const user = await db.Users.findByPk(id)
       // const user = await db.Users.findAll();
       res.json(user)
