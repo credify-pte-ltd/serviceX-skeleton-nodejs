@@ -133,4 +133,14 @@ $ cd skeleton-model-app/market
 $ yarn test
 ```
 
+## How to deploy on Heroku
 
+https://elements.heroku.com/buildpacks/timanovsky/subdir-heroku-buildpack
+
+```shell
+$ heroku buildpacks:clear
+$ heroku buildpacks:set https://github.com/timanovsky/subdir-heroku-buildpack
+$ heroku buildpacks:add heroku/nodejs
+$ heroku config:set PROJECT_PATH=skeleton-model-app/market
+$ git push heroku main
+```
