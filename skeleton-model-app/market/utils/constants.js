@@ -4,7 +4,7 @@ const PERMISSION_SCOPE = {
   READ_FILTER_OFFER: "claim_provider:read_filtered_offers",
 }
 
-const DEFAULT_PATH_PREFIX = "/api/v1"
+const DEFAULT_PATH_PREFIX = "/v1"
 
 const DEFAULT_PATH = {
   PUSH_CLAIMS: "/push-claims",
