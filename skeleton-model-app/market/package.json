@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "This is a skeleton service that can easily integrate serviceX.",
   "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
