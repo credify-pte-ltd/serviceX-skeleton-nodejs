@@ -3,8 +3,10 @@ const extractToken = require("../utils/extractToken")
 const {fetchUserClaimObject} = require("../dataInteraction");
 
 const filterOffer = async (req, res, { db, credify }) => {
+  console.log("1111111111111111")
   if (process.env.CONTEXT_ENV !== "Jest") {
     try {
+      console.log(JSON.stringify(req.body))
       const token = extractToken(req)
       const validToken = await credify.auth.introspectToken(
         token,
