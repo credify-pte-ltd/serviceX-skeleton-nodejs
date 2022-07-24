@@ -20,8 +20,7 @@ const fetchUserClaimObject = async (db, localId, credifyId, includingScopes, wit
     return null;
   }
 
-  // const shareableProfile = (process.env.APP_PROVIDING_BASIC_PROFILE || "").split(",").map((p) => p.toUpperCase());
-  const shareableProfile = ["PHONE"]
+  const shareableProfile = (process.env.APP_PROVIDING_BASIC_PROFILE || "").split(",").map((p) => p.toUpperCase());
   const claims = {};
 
   let commitments = undefined;
