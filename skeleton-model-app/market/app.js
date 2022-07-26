@@ -9,6 +9,7 @@ const v1 = require("./v1/index")
 const db = require("./database/models")
 
 const app = express()
+app.use(cors())
 // app.use(
 //   cors({
 //     origin: process.env.APP_FE_ORIGIN,
