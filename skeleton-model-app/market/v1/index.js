@@ -51,8 +51,6 @@ module.exports = ({ db }) => {
 
   // Called by Credify backend
   api.post(DEFAULT_PATH.OFFERS_FILTERING, async (req, res) => {
-    console.log("test")
-    console.log(req.headers)
     return filterOffer(req, res, { db, credify: await getCredifyInstance() })
   })
 

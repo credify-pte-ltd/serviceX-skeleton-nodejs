@@ -3,10 +3,8 @@ const extractToken = require("../utils/extractToken")
 const {fetchUserClaimObject} = require("../dataInteraction");
 
 const filterOffer = async (req, res, { db, credify }) => {
-  console.log("1111111111111111")
   if (process.env.CONTEXT_ENV !== "Jest") {
     try {
-      console.log(JSON.stringify(req.body))
       const token = extractToken(req)
       const validToken = await credify.auth.introspectToken(
         token,
@@ -20,16 +18,9 @@ const filterOffer = async (req, res, { db, credify }) => {
     }
   }
 
-  console.log("AAAAAAAAAAAAAAAAAa")
-
   const credifyId = req.body.credify_id
   const localId = req.body.local_id
   const offers = req.body.offers
-
-  console.log("BBBBBBBBBBBBBBB")
-  console.log(credifyId)
-  console.log(localId)
-  console.log(offers.length)
 
   if (!credifyId && !localId) {
     return res.status(400).send({ message: "No ID found" })
@@ -43,8 +34,6 @@ const filterOffer = async (req, res, { db, credify }) => {
     return res.status(200).json(response)
   }
 
-  console.log("CCCCCCCCCCCCCCc")
-
   try {
     if (!offers.length) {
       const response = {
@@ -55,12 +44,7 @@ const filterOffer = async (req, res, { db, credify }) => {
       return res.status(200).json(response)
     }
 
-    console.log("DDDDDDDDDDDDD")
-
-
     const userClaims = await fetchUserClaimObject(db, localId, credifyId, [], false);
-
-    console.log("EEEEEEEEEEEE")
     const personalizedOffers = []
 
     await Promise.all((offers.map(async (offer) => {
@@ -69,9 +53,6 @@ const filterOffer = async (req, res, { db, credify }) => {
         offer.required_custom_scopes || [],
         userClaims
       )
-
-      console.log("FFFFFFFFFFFFF")
-
 
       const formattedOffer = {
         ...offer,
@@ -87,8 +68,6 @@ const filterOffer = async (req, res, { db, credify }) => {
         personalizedOffers.push(formattedOffer)
       }
     })))
-
-    console.log("GGGGGGGGGGGGG")
 
     const response = {
       data: {
