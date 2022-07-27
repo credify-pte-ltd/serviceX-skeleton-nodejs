@@ -46,62 +46,74 @@ module.exports = ({ db }) => {
 
   // Called by Credify frontend SDK
   api.post(DEFAULT_PATH.PUSH_CLAIMS, async (req, res) => {
-    return pushClaims(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return pushClaims(req, res, { db, credify })
   })
 
   // Called by Credify backend
   api.post(DEFAULT_PATH.OFFERS_FILTERING, async (req, res) => {
-    return filterOffer(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return filterOffer(req, res, { db, credify })
   })
 
   // Called by Credify backend
   api.post(DEFAULT_PATH.USER_COUNTS, async (req, res) => {
-    return countUsers(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return countUsers(req, res, { db, credify })
   })
 
   // Called by Credify backend
   api.post(DEFAULT_PATH.OFFER_EVALUATION, async (req, res) => {
-    return evaluate(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return evaluate(req, res, { db, credify })
   })
 
   // Called by Credify backend
   api.post(DEFAULT_PATH.ENCRYPTED_CLAIMS, async (req, res) => {
-    return encryptClaims(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return encryptClaims(req, res, { db, credify })
   })
 
   // Called by Service Provider frontend
   api.get(DEFAULT_PATH.BNPL_COMPLETION_CALLBACK, async (req, res) => {
-    return bnplCallback(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return bnplCallback(req, res, { db, credify })
   })
 
   // Deprecated. Called by Service Provider frontend
   api.get(DEFAULT_PATH.OLD_BNPL_COMPLETION_CALLBACK, async (req, res) => {
-    return bnplCallback(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return bnplCallback(req, res, { db, credify })
   })
 
   // Called by Credify backend
   api.post(DEFAULT_PATH.WEBHOOK, async (req, res) => {
-    return webhook(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return webhook(req, res, { db, credify })
   })
 
   // Called by your system for BNPL
   api.post("/orders", async (req, res) => {
-    return createOrder(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return createOrder(req, res, { db, credify })
   })
 
   // Called by your system for BNPL
   api.get("/orders/credify/:id", async (req, res) => {
-    return getOrders(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return getOrders(req, res, { db, credify })
   })
 
   // Called by your system for BNPL
   api.post("/orders/:id/cancel", async (req, res) => {
-    return cancelOrder(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return cancelOrder(req, res, { db, credify })
   })
 
   // Called by your system for BNPL
   api.post("/orders/:id/disburse", async (req, res) => {
-    return disburse(req, res, { db, credify: await getCredifyInstance() })
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return disburse(req, res, { db, credify })
   })
 
   // Not required. This is for the demo purpose.
