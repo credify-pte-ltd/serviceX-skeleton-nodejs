@@ -13,6 +13,7 @@ const DEFAULT_PATH = {
   OFFER_EVALUATION: "/offer-evaluation",
   ENCRYPTED_CLAIMS: "/encrypted-claims",
   BNPL_COMPLETION_CALLBACK: "/bnpl/orders/:orderId/redirect",
+  OLD_BNPL_COMPLETION_CALLBACK: "/bnpl/order/:orderId/redirect",
   WEBHOOK: "/webhook",
 };
 

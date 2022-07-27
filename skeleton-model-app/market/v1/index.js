@@ -76,6 +76,11 @@ module.exports = ({ db }) => {
     return bnplCallback(req, res, { db, credify: await getCredifyInstance() })
   })
 
+  // Deprecated. Called by Service Provider frontend
+  api.get(DEFAULT_PATH.OLD_BNPL_COMPLETION_CALLBACK, async (req, res) => {
+    return bnplCallback(req, res, { db, credify: await getCredifyInstance() })
+  })
+
   // Called by Credify backend
   api.post(DEFAULT_PATH.WEBHOOK, async (req, res) => {
     return webhook(req, res, { db, credify: await getCredifyInstance() })

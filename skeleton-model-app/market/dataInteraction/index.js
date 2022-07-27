@@ -205,14 +205,18 @@ const authenticateInternalAPIClient = async (db, req) => {
  */
 const getBNPLCallback = async (db, orderId) => {
   // Do something
-  return "https://example.com"
+  // Return callback URL
+  return "https://bnpl-sample.netlify.app/callback"
 }
+
+
+
 
 /**
  * This is a domain of this server. This is necessary for webhook request validation.
  * @type {string}
  */
-const apiDomain = "https://example.com"
+const apiDomain = "https://bnpl-demo.herokuapp.com"
 
 /**
  * This handles webhook requests sent by us.
