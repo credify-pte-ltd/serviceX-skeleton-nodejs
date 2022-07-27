@@ -1,4 +1,6 @@
-FROM 958130917597.dkr.ecr.ap-southeast-1.amazonaws.com/node:14.15.5-alpine3.13
+FROM alpine:3.14
+
+RUN apk add --no-cache yarn
 
 COPY . /demo
 
