@@ -8,4 +8,8 @@ WORKDIR /demo
 
 RUN yarn install
 
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+USER appuser
+
 ENTRYPOINT ["/bin/sh", "-c", "yarn db:setup && yarn start" ]
