@@ -106,6 +106,12 @@ module.exports = ({ db }) => {
     return disburse(req, res, { db, credify: await getCredifyInstance() })
   })
 
+  // Not required. This is for the demo purpose.
+  api.get("/orders", async (req, res) => {
+    const orders = await db.Order.findAll()
+    res.status(200).json({ orders: orders })
+  })
+
 
   return api
 }

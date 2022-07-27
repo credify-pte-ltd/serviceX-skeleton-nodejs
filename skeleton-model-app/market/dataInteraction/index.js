@@ -317,6 +317,22 @@ const buildOrderCreationPayload = (req) => {
   }
 }
 
+/**
+ * This is called after order ID is created.
+ *
+ * @param db
+ * @param id {string} Order ID
+ * @param payload {object} Order creation request payload + local ID
+ * @return {Promise<void>}
+ */
+const handleOrder = async (db, id, payload) => {
+  const data = {
+    orderId: id,
+    ...payload,
+  }
+  await db.Order.create(data)
+}
+
 
 /////////////////////////////////////////////////////////////
 // Private methods (please modify the following as you like.)
@@ -372,6 +388,7 @@ module.exports = {
   authenticateInternalAPIClient,
   getBNPLCallback,
   buildOrderCreationPayload,
+  handleOrder,
   apiDomain,
   handleWebhook,
 }
