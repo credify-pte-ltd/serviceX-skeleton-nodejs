@@ -299,10 +299,10 @@
     node-forge "^1.3.1"
     rollup-plugin-delete "^2.0.0"
 
-"@credify/crypto@^1.3.7":
-  version "1.3.8"
-  resolved "https://registry.yarnpkg.com/@credify/crypto/-/crypto-1.3.8.tgz#5fbe154020af7f369502b62595e304c4febbe7e4"
-  integrity sha512-V2H9yg7h8nRdo4iofm+swqUuk09RFvPs3sMd1756GgWxWxtGnqpG1+6MYT4iJ/OXUVUWXmVzbthVysFv/L+xyw==
+"@credify/crypto@^1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@credify/crypto/-/crypto-1.4.4.tgz#06edd5ea8fe629eb1f8bc6e1df6a4a5dbef14f1a"
+  integrity sha512-m3YKIFJKLw6EG526f7VdymzYAAE9KZMxPWpc3avPmKGQdSTsz/uwrmeP0FukPwtFPXgRI/3ni/vsw1KR7n4JCA==
   dependencies:
     "@credify/crypto-key-composer" "^0.1.8"
     "@peculiar/webcrypto" "^1.4.0"
@@ -313,12 +313,12 @@
     node-forge "^1.3.1"
     wif "^2.0.6"
 
-"@credify/nodejs@^1.20.0":
-  version "1.20.0"
-  resolved "https://registry.yarnpkg.com/@credify/nodejs/-/nodejs-1.20.0.tgz#6e240fad0c665f49a61ea90dd90dd1c8c0bfd143"
-  integrity sha512-sZ/bwWZJ9pP4OVZkwRH7NetAhldiXp6QC2IojRXR7kCvoiCMq3C1yxcBeXBG301pBrEAopeQXR6j0PjlwSPd0A==
+"@credify/nodejs@^1.20.5":
+  version "1.20.5"
+  resolved "https://registry.yarnpkg.com/@credify/nodejs/-/nodejs-1.20.5.tgz#91131845c559e82b6bb9edc1d1b1e2bc61c629db"
+  integrity sha512-dmwBjQOs2WYbIcsgwb2Zw79q/SDIwqhB3P0VzokAZsmufyIIGQRoEUK1sInV+L/GCXUu8ww1oZJNf3GBgMDqhg==
   dependencies:
-    "@credify/crypto" "^1.3.7"
+    "@credify/crypto" "^1.4.4"
     axios "^0.21.1"
     axios-mock-adapter "^1.19.0"
 

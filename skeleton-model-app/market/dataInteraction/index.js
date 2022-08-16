@@ -2,7 +2,7 @@
 // REQUIRED IMPLEMENTATION
 ////////////////////////////////////////////
 
-const {DEFAULT_PATH, DEFAULT_PATH_PREFIX} = require("../utils/constants");
+const {DEFAULT_PATH, DEFAULT_PATH_PREFIX, BNPL_ORDER_STATUS} = require("../utils/constants");
 /**
  * This returns Credify scope object for a specified user.
  *
@@ -210,38 +210,64 @@ const getBNPLCallback = async (db, orderId) => {
 }
 
 
-
-
 /**
  * This is a domain of this server. This is necessary for webhook request validation.
  * @type {string}
  */
 const apiDomain = "https://bnpl-demo.herokuapp.com"
 
+
 /**
- * This handles webhook requests sent by us.
- * The webhook requests have a signature that proves the quests are coming from us.
- * The signature verification is handled before calling this handler.
- * Ref: https://developers.credify.one/guide/webhook.html#webhook
- *
- * What this handler should do is
- * 1. Check the type of this webhook
- *    - Offer transaction status update
- *    - Dispute completion
- *    - Payment completion (BNPL)
- *    - Disbursement requirement status updated
- * 2. Do what you need accordingly
- *
+ * This function handles offer status update notified via webhook
+ * This function may be called several times
  * @param db
- * @param req
+ * @param payload
  * @returns {Promise<void>}
  */
-const handleWebhook = async (db, req) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => resolve(true), 1000);
-  });
+const handleOfferStatusUpdate = async (db, payload) => {
+  // Optional
+  // Not necessary for BNPL use
 }
 
+/**
+ * This function handles dispute completion notified via webhook
+ * This function may be called several times
+ * @param db
+ * @param payload
+ * @returns {Promise<void>}
+ */
+const handleDisputeCompletion = async (db, payload) => {
+  // Optional
+  // Not necessary for BNPL use
+}
+
+/**
+ * This function handles order status update notified via webhook
+ * This function may be called several times
+ * @param db
+ * @param orderId
+ * @param status
+ * @returns {Promise<void>}
+ */
+const handleOrderStatusUpdate = async (db, orderId, status) => {
+  switch (status) {
+    case BNPL_ORDER_STATUS.ORDER_STATUS_CANCELED:
+      // Handle cancellation callback
+      break
+    case BNPL_ORDER_STATUS.ORDER_STATUS_APPROVED:
+      // BNPL is approved.
+      // Next step should be delivery.
+      break
+    case BNPL_ORDER_STATUS.ORDER_STATUS_DISBURSING:
+      // This is a confirmation from a BNPL provider to disburse loan
+      break
+    case BNPL_ORDER_STATUS.ORDER_STATUS_PAID:
+      // Disbursement is completed
+      break
+    default:
+      break
+  }
+}
 
 /**
  * This composes BNPL order creation payload.
@@ -319,6 +345,7 @@ const buildOrderCreationPayload = (req) => {
 
 /**
  * This is called after order ID is created.
+ * You have to record the order ID somewhere for later use.
  *
  * @param db
  * @param id {string} Order ID
@@ -387,8 +414,10 @@ module.exports = {
   authenticateInternalUser,
   authenticateInternalAPIClient,
   getBNPLCallback,
+  handleOfferStatusUpdate,
+  handleDisputeCompletion,
+  handleOrderStatusUpdate,
   buildOrderCreationPayload,
   handleOrder,
   apiDomain,
-  handleWebhook,
 }

@@ -1,5 +1,5 @@
-const {apiDomain, handleWebhook} = require("../dataInteraction");
-const {DEFAULT_PATH_PREFIX, DEFAULT_PATH} = require("../utils/constants");
+const {apiDomain, handleOfferStatusUpdate, handleDisputeCompletion, handleOrderStatusUpdate } = require("../dataInteraction");
+const {DEFAULT_PATH_PREFIX, DEFAULT_PATH, WEBHOOK_EVENTS} = require("../utils/constants");
 
 const webhook = async (req, res, { db, credify }) => {
   const signature = req.headers["signature"] || req.headers["Signature"];
@@ -22,7 +22,34 @@ const webhook = async (req, res, { db, credify }) => {
     return res.status(401).send({ message: "Unauthorized" })
   }
 
-  await handleWebhook(db, req);
+  try {
+    let orderId;
+    switch (req.body.type) {
+      case WEBHOOK_EVENTS.OFFER_TX_STATUS_UPDATED:
+        await handleOfferStatusUpdate(db, req.body)
+        break
+      case WEBHOOK_EVENTS.DISPUTE_COMPLETED:
+        await handleDisputeCompletion(db, req.body)
+        break
+      case WEBHOOK_EVENTS.ORDER_STATUS_UPDATED:
+        orderId = req.body.order_id;
+        const status = req.body.order_status;
+        await handleOrderStatusUpdate(db, orderId, status)
+        break
+      case WEBHOOK_EVENTS.DISBURSEMENT_STATUS_UPDATED:
+        orderId = req.body.order_id;
+        const isFulfilled = req.body.is_fulfilled || false
+        if (isFulfilled) {
+          const res = await credify.bnpl.disbursement(orderId)
+        }
+        break
+      default:
+        break
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: e.message });
+  }
 
   return res.status(200).json({ message: "Success" });
 }

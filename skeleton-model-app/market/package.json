@@ -31,7 +31,7 @@
   "author": "@credify-pte-ltd",
   "license": "MIT",
   "dependencies": {
-    "@credify/nodejs": "^1.20.0",
+    "@credify/nodejs": "^1.20.5",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
