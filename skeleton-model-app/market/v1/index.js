@@ -7,6 +7,7 @@ const filterOffer = require("../handlers/filterOffer")
 const countUsers = require("../handlers/countUsers")
 const encryptClaims = require("../handlers/encryptClaims")
 const pushClaims = require("../handlers/pushClaims")
+const pushDisbursementClaims = require("../handlers/pushDisbursementClaims")
 const webhook = require("../handlers/webhook")
 const bnplCallback = require("../handlers/bnplCallback")
 const createOrder = require("../handlers/createOrder")
@@ -24,12 +25,6 @@ module.exports = ({ db }) => {
   const api = Router()
 
   let credify = null;
-
-  const getCredifyInstance = async () => {
-    if (!credify)
-      return await Credify.create(formKey(signingKey), apiKey, { mode });
-    return credify;
-  };
 
   // Not required. This is for the debugging purpose.
   api.get("/demo-user", async (req, res) => {
@@ -93,28 +88,40 @@ module.exports = ({ db }) => {
   })
 
   // Called by your system for BNPL
+  // This is necessary to start BNPL
   api.post("/orders", async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
     return createOrder(req, res, { db, credify })
   })
 
   // Called by your system for BNPL
+  // This is optional
   api.get("/orders/credify/:id", async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
     return getOrders(req, res, { db, credify })
   })
 
   // Called by your system for BNPL
+  // This is necessary if you want to cancel the BNPL order
   api.post("/orders/:id/cancel", async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
     return cancelOrder(req, res, { db, credify })
   })
 
   // Called by your system for BNPL
+  // This is handled by webhook handler by default, so you don't have to explicitly call this
   api.post("/orders/:id/disburse", async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
     return disburse(req, res, { db, credify })
   })
+
+  // Called by your system for BNPL
+  // This is necessary to request disbursement
+  api.post("/orders/:id/disbursement-docs", async (req, res) => {
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return pushDisbursementClaims(req, res, { db, credify })
+  })
+
 
   // Not required. This is for the demo purpose.
   api.get("/orders", async (req, res) => {
