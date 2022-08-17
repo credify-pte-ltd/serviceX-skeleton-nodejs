@@ -1,5 +1,8 @@
-const {upsertCommitments, authenticateInternalUser, updateUserId, fetchUserClaimObject} = require("../dataInteraction");
-const {DISBURSEMENT_DOCS} = require("../utils/constants");
+const {upsertCommitments, authenticateInternalUser, updateUserId, fetchUserClaimObject, saveDisbursementDocs,
+  getCredifyId
+} = require("../dataInteraction");
+const composeDisbursementClaims = require("../utils/composeDisbursementClaims")
+const loadDocuments = require("../utils/base64StringFromRemoteFile");
 
 const pushDisbursementClaims = async (req, res, { db, credify }) => {
 
@@ -13,42 +16,21 @@ const pushDisbursementClaims = async (req, res, { db, credify }) => {
     return res.status(400).send({ message: "Please recheck config - organization ID" })
   }
 
-  if (!req.body.order_id || !req.body.documents || !req.body.credify_id) {
+  if (!req.body.order_id || !req.body.documents) {
     return res.status(400).send({ message: "Invalid body" })
   }
 
+
   try {
     const orderId = req.body.order_id
-    const documents = req.body.documents
-    const credifyId = req.body.credify_id
+    const documentRefs = req.body.documents
 
-    const BNPL_ORDER = "bnpl_order";
-    const COMMITMENT = "commitment";
-    const claims = {};
-    if (!documents || !Object.keys(documents).length) return claims;
-    Object.keys(documents).forEach((key) => {
-      let claimKey, documentContent, commitmentKey;
-      if (
-        key === DISBURSEMENT_DOCS.INVOICE.toLowerCase() ||
-        key === DISBURSEMENT_DOCS.DOWN_PAYMENT.toLowerCase() ||
-        key === DISBURSEMENT_DOCS.FIRST_PAYMENT.toLowerCase() ||
-        key === DISBURSEMENT_DOCS.DELIVERY.toLowerCase()
-      ) {
-        claimKey = `${BNPL_ORDER}:${orderId}:${key}`;
-        documentContent = documents[key];
-        commitmentKey = `${BNPL_ORDER}:${orderId}:${key}:${COMMITMENT}`;
-      }
-
-      claims[`${BNPL_ORDER}:${orderId}:${key}`] = {
-        [`${BNPL_ORDER}:${orderId}:${key}`]: {
-          content_type: "pdf",
-          content: documentContent,
-        },
-      };
-    });
-
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    await delay(3000);
+    const credifyId = await getCredifyId(db, orderId)
+    if (!credifyId) {
+      return res.status(500).send({ message: "No Credify ID associated with this Order ID" })
+    }
+    const docs = await loadDocuments(documentRefs)
+    const claims = await composeDisbursementClaims(db, docs, orderId, false)
 
     const commitments = await credify.claims.push(
       organizationId,
@@ -56,7 +38,11 @@ const pushDisbursementClaims = async (req, res, { db, credify }) => {
       claims
     )
 
+    console.log("test")
+
     await upsertCommitments(db, credifyId, commitments);
+
+    await saveDisbursementDocs(db, orderId, documentRefs)
 
     res.json({ credifyId })
   } catch (e) {

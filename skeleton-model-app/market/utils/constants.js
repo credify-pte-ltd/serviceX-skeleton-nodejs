@@ -7,6 +7,7 @@ const PERMISSION_SCOPE = {
 const DEFAULT_PATH_PREFIX = "/v1"
 
 const DEFAULT_PATH = {
+  // Credify specs
   PUSH_CLAIMS: "/push-claims",
   OFFERS_FILTERING: "/offers-filtering",
   USER_COUNTS: "/user-counts",
@@ -14,7 +15,11 @@ const DEFAULT_PATH = {
   ENCRYPTED_CLAIMS: "/encrypted-claims",
   BNPL_COMPLETION_CALLBACK: "/bnpl/orders/:orderId/redirect",
   OLD_BNPL_COMPLETION_CALLBACK: "/bnpl/order/:orderId/redirect",
+  GET_BNPL_DISBURSEMENT_DOCS: "/bnpl/orders/:orderId/disbursement-requirements",
+
+  // Customizable
   WEBHOOK: "/webhook",
+  PUSH_BNPL_DISBURSEMENT_CLAIMS: "/push-disbursement-claims",
 };
 
 const WEBHOOK_EVENTS = {
