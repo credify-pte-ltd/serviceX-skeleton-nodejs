@@ -19,7 +19,10 @@ module.exports = (sequelize, DataTypes) => {
     referenceId: DataTypes.STRING,
     totalAmount: DataTypes.JSONB,
     orderLines: DataTypes.JSONB,
-    paymentRecipient: DataTypes.JSONB
+    paymentRecipient: DataTypes.JSONB,
+    status: DataTypes.STRING,
+    commitments: DataTypes.JSONB,
+    disbursementDocs: DataTypes.JSONB
   }, {
     sequelize,
     modelName: 'Order',

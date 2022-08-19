@@ -257,6 +257,7 @@ const handleOrderStatusUpdate = async (db, orderId, status) => {
     case BNPL_ORDER_STATUS.ORDER_STATUS_APPROVED:
       // BNPL is approved.
       // Next step should be delivery.
+
       break
     case BNPL_ORDER_STATUS.ORDER_STATUS_DISBURSING:
       // This is a confirmation from a BNPL provider to disburse loan
@@ -266,6 +267,11 @@ const handleOrderStatusUpdate = async (db, orderId, status) => {
       break
     default:
       break
+  }
+
+  const o = await db.Order.findOne({ where: { orderId } })
+  if (o) {
+    await o.update({ ...o, status })
   }
 }
 
@@ -356,10 +362,90 @@ const handleOrder = async (db, id, payload) => {
   const data = {
     orderId: id,
     ...payload,
+    status: BNPL_ORDER_STATUS.ORDER_STATUS_PENDING,
+    commitments: {}
   }
   await db.Order.create(data)
 }
 
+/**
+ * This function retrieves order commitment values from DB
+ *
+ * @param db
+ * @param orderId
+ * @returns {Promise<Object|null>}
+ */
+const fetchOrderCommitment = async (db, orderId) => {
+  const model = await db.Order.findOne({ where: { orderId } })
+  if (model) {
+    return model.commitments;
+  }
+  return null;
+}
+
+const updateOrderCommitment = async (db, orderId, commitments) => {
+  const order = await db.Order.findOne({ where: { orderId } })
+  if (!order) {
+    return null;
+  }
+  await order.update({ commitments })
+}
+
+
+/**
+ * This function returns Credify ID associated with a provided order ID
+ *
+ * @param db
+ * @param orderId {string}
+ * @returns {Promise<string|null>}
+ */
+const getCredifyId = async (db, orderId) => {
+  const order = await db.Order.findOne({ where: { orderId } })
+  if (!order) {
+    return null;
+  }
+  const user = await fetchUser(db, order.localId, undefined)
+  if (!user) {
+    return null;
+  }
+  return user.credifyId;
+}
+
+/**
+ * This function saves disbursement docs per order ID
+ * @param db
+ * @param orderId {string}
+ * @param disbursementDocs {
+ *  {
+ *    "invoice": "https://xx.com/invoce.pdf",
+ *    "down_payment": "https://xx.com/down_payment.pdf",
+ *    "first_payment": "https://xx.com/first_payment.pdf",
+ *    "delivery": "https://xx.com/delivery.pdf"
+ *  }
+ * }
+ * @returns {Promise<null>}
+ */
+const saveDisbursementDocs = async (db, orderId, disbursementDocs) => {
+  const order = await db.Order.findOne({ where: { orderId } })
+  if (!order) {
+    return null;
+  }
+  await order.update({ disbursementDocs })
+}
+
+/**
+ * This function returns document references by order ID
+ * @param db
+ * @param orderId
+ * @returns {Promise<null|{invoice: "https://xx.com/invoce.pdf", down_payment: "https://xx.com/down_payment.pdf", first_payment: "https://xx.com/first_payment.pdf", delivery: "https://xx.com/delivery.pdf"}|*>}
+ */
+const fetchDisbursementDocs = async (db, orderId) => {
+  const order = await db.Order.findOne({ where: { orderId } })
+  if (!order) {
+    return null;
+  }
+  return order.disbursementDocs
+}
 
 /////////////////////////////////////////////////////////////
 // Private methods (please modify the following as you like.)
@@ -420,4 +506,9 @@ module.exports = {
   buildOrderCreationPayload,
   handleOrder,
   apiDomain,
+  fetchOrderCommitment,
+  updateOrderCommitment,
+  getCredifyId,
+  saveDisbursementDocs,
+  fetchDisbursementDocs,
 }

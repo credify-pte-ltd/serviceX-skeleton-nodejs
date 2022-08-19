@@ -8,6 +8,7 @@ const countUsers = require("../handlers/countUsers")
 const encryptClaims = require("../handlers/encryptClaims")
 const pushClaims = require("../handlers/pushClaims")
 const pushDisbursementClaims = require("../handlers/pushDisbursementClaims")
+const getBNPLDisbursementDocs = require("../handlers/getBNPLDisbursementDocs")
 const webhook = require("../handlers/webhook")
 const bnplCallback = require("../handlers/bnplCallback")
 const createOrder = require("../handlers/createOrder")
@@ -87,6 +88,12 @@ module.exports = ({ db }) => {
     return webhook(req, res, { db, credify })
   })
 
+  // Called by Credify backend
+  api.post(DEFAULT_PATH.GET_BNPL_DISBURSEMENT_DOCS, async (req, res) => {
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return getBNPLDisbursementDocs(req, res, { db, credify })
+  })
+
   // Called by your system for BNPL
   // This is necessary to start BNPL
   api.post("/orders", async (req, res) => {
@@ -117,7 +124,7 @@ module.exports = ({ db }) => {
 
   // Called by your system for BNPL
   // This is necessary to request disbursement
-  api.post("/orders/:id/disbursement-docs", async (req, res) => {
+  api.post(DEFAULT_PATH.PUSH_BNPL_DISBURSEMENT_CLAIMS, async (req, res) => {
     const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
     return pushDisbursementClaims(req, res, { db, credify })
   })
