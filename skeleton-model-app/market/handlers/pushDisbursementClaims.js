@@ -1,5 +1,8 @@
-const {upsertCommitments, authenticateInternalUser, updateUserId, fetchUserClaimObject, saveDisbursementDocs,
-  getCredifyId
+const {
+  authenticateInternalUser,
+  saveDisbursementDocs,
+  getCredifyId,
+  updateOrderCommitment
 } = require("../dataInteraction");
 const composeDisbursementClaims = require("../utils/composeDisbursementClaims")
 const loadDocuments = require("../utils/base64StringFromRemoteFile");
@@ -20,7 +23,6 @@ const pushDisbursementClaims = async (req, res, { db, credify }) => {
     return res.status(400).send({ message: "Invalid body" })
   }
 
-
   try {
     const orderId = req.body.order_id
     const documentRefs = req.body.documents
@@ -38,10 +40,7 @@ const pushDisbursementClaims = async (req, res, { db, credify }) => {
       claims
     )
 
-    console.log("test")
-
-    await upsertCommitments(db, credifyId, commitments);
-
+    await updateOrderCommitment(db, orderId, commitments);
     await saveDisbursementDocs(db, orderId, documentRefs)
 
     res.json({ credifyId })

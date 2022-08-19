@@ -45,9 +45,7 @@ const composeDisbursementClaims = async (db, documents, orderId, withCommitments
         content_type: "pdf",
         content: documentContent,
       },
-      // TODO: fix
-        // [commitmentKey]: commitments ? commitments[claimKey] : undefined,
-      [commitmentKey]: "commitment"
+      [commitmentKey]: commitments ? commitments[claimKey] : undefined,
     };
   });
   return claims;

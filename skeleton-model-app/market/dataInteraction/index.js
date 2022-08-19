@@ -383,6 +383,14 @@ const fetchOrderCommitment = async (db, orderId) => {
   return null;
 }
 
+const updateOrderCommitment = async (db, orderId, commitments) => {
+  const order = await db.Order.findOne({ where: { orderId } })
+  if (!order) {
+    return null;
+  }
+  await order.update({ commitments })
+}
+
 
 /**
  * This function returns Credify ID associated with a provided order ID
@@ -499,6 +507,7 @@ module.exports = {
   handleOrder,
   apiDomain,
   fetchOrderCommitment,
+  updateOrderCommitment,
   getCredifyId,
   saveDisbursementDocs,
   fetchDisbursementDocs,
