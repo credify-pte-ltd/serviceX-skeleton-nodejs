@@ -24,5 +24,8 @@ describe(`Test ${DEFAULT_PATH.GET_BNPL_DISBURSEMENT_DOCS} path`, () => {
     expect(res.body._claim_names).toHaveProperty(`${KEY_PREFIX}:${orderId}:${DISBURSEMENT_DOCS.DELIVERY}`)
     expect(res.body._claim_names).toHaveProperty(`${KEY_PREFIX}:${orderId}:${DISBURSEMENT_DOCS.DELIVERY}:commitment`)
     expect(res.body).toHaveProperty("_claim_sources")
+    const token = res.body._claim_sources[`${KEY_PREFIX}:${orderId}`].JWT
+    expect(token).not.toBeUndefined()
+
   }, 15000);
 });
