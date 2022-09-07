@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const envConfigs =  require('../config/config');
+const envConfigs = require('../config/config');
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
@@ -16,6 +16,15 @@ if (config.url) {
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.info('INFO - Database connected.')
+  })
+  .catch(err => {
+    console.error('ERROR - Unable to connect to the database:', err)
+  })
 
 fs
   .readdirSync(__dirname)

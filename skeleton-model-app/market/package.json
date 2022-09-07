@@ -15,7 +15,7 @@
     "db:create": "yarn run sequelize db:create",
     "model:create": "yarn run sequelize model:generate",
     "db:migrate:create": "yarn run sequelize migration:generate",
-    "db:migrate": "yarn run sequelize db:migrate",
+    "db:migrate": "yarn sequelize db:migrate",
     "db:migrate:undo": "yarn run sequelize db:migrate:undo:all",
     "db:seed:generate": "yarn run sequelize seed:generate",
     "db:seed:all": "yarn run sequelize db:seed:all",
