@@ -15,8 +15,9 @@ const createOrder = require("../handlers/createOrder")
 const getOrders = require("../handlers/getOrders")
 const cancelOrder = require("../handlers/cancelOrder")
 const disburse = require("../handlers/disburse")
+const simulation = require("../handlers/simulation")
 const faker = require("faker")
-const {DEFAULT_PATH} = require("../utils/constants");
+const { DEFAULT_PATH } = require("../utils/constants");
 
 const mode = process.env.MODE || "development"
 const signingKey = process.env.APP_SIGNING_KEY
@@ -134,6 +135,11 @@ module.exports = ({ db }) => {
   api.get("/orders", async (req, res) => {
     const orders = await db.Order.findAll()
     res.status(200).json({ orders: orders })
+  })
+
+  api.post(DEFAULT_PATH.SIMULATION, async (req, res) => {
+    const credify = await Credify.create(formKey(signingKey), apiKey, { mode })
+    return simulation(req, res, { db, credify })
   })
 
 
