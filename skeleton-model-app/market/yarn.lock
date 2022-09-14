@@ -313,10 +313,10 @@
     node-forge "^1.3.1"
     wif "^2.0.6"
 
-"@credify/nodejs@^1.20.5":
-  version "1.20.5"
-  resolved "https://registry.yarnpkg.com/@credify/nodejs/-/nodejs-1.20.5.tgz#91131845c559e82b6bb9edc1d1b1e2bc61c629db"
-  integrity sha512-dmwBjQOs2WYbIcsgwb2Zw79q/SDIwqhB3P0VzokAZsmufyIIGQRoEUK1sInV+L/GCXUu8ww1oZJNf3GBgMDqhg==
+"@credify/nodejs@^1.21.0":
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/@credify/nodejs/-/nodejs-1.21.0.tgz#ef24e202054a089cbda1745aa25b86680a3049eb"
+  integrity sha512-Y0UQCCuSoHu9/hbYxxt4zCXNaYcmaYSPQzpV4JcUNjAjDTqOaVyuiBK7lb3XvZiPqb5OpFlLz6pEmavNOE4WLQ==
   dependencies:
     "@credify/crypto" "^1.4.4"
     axios "^0.21.1"
