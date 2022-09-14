@@ -16,6 +16,7 @@ const DEFAULT_PATH = {
   BNPL_COMPLETION_CALLBACK: "/bnpl/orders/:orderId/redirect",
   OLD_BNPL_COMPLETION_CALLBACK: "/bnpl/order/:orderId/redirect",
   GET_BNPL_DISBURSEMENT_DOCS: "/bnpl/orders/:orderId/disbursement-requirements",
+  SIMULATION: "/simulation",
 
   // Customizable
   WEBHOOK: "/webhook",
