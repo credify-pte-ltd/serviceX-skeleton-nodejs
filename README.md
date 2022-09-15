@@ -1,5 +1,10 @@
 # Skeleton service for serviceX (Node.js)
 
+This is outdated. Please check the following instead.
+- [Market skeleton](https://github.com/credify-pte-ltd/serviceX-market-skeleton-nodejs)
+- [Service Provider skeleton](https://github.com/credify-pte-ltd/serviceX-service-provider-skeleton-nodejs)
+
+
 Inside the `skeleton-model-app` repository, we have two folders:
 
 - `market`
